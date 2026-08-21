@@ -13,7 +13,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   static const String _validEmail = 'yustikamonita@gmail.com';
-  static const String _validPassword = 'IndibizBanyuwangi';
+  static const String _validPassword = 'alwaysthebest';
   bool _emailError = false;
 
   @override
