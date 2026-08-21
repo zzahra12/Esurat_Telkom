@@ -21,23 +21,22 @@ class BnaPdfService {
 
     final pdf = pw.Document();
 
-    // Cek ketersediaan data Penerima Kuasa
-    final bool adaKuasa =
-        (data.namaKuasa ?? '').toString().trim().isNotEmpty &&
-            (data.namaKuasa ?? '').toString().trim() != '-';
+    // Safely parse string
+    final String namaKuasaStr = (data.namaKuasa ?? '').toString().trim();
+    final bool adaKuasa = namaKuasaStr.isNotEmpty && namaKuasaStr != '-';
 
     // 🔄 PEMETAAN VARIABEL:
     // ATAS: Selalu Data Pelanggan Utama
-    String atasNama = data.namaPelanggan;
-    String atasAlamat = data.alamatPelanggan;
-    String atasTipeId = data.tipeIdentitasPelanggan;
-    String atasNoId = data.nomorIdentitasPelanggan;
+    String atasNama = data.namaPelanggan ?? '';
+    String atasAlamat = data.alamatPelanggan ?? '';
+    String atasTipeId = data.tipeIdentitasPelanggan ?? '';
+    String atasNoId = data.nomorIdentitasPelanggan ?? '';
 
     // TENGAH: Data Penerima Kuasa (jika ada) atau '-'
-    String bawahNama = adaKuasa ? data.namaKuasa : '-';
-    String bawahAlamat = adaKuasa ? data.alamatKuasa : '-';
-    String bawahTipeId = adaKuasa ? data.tipeIdentitasKuasa : '-';
-    String bawahNoId = adaKuasa ? data.nomorIdentitasKuasa : '-';
+    String bawahNama = adaKuasa ? namaKuasaStr : '-';
+    String bawahAlamat = adaKuasa ? (data.alamatKuasa ?? '-') : '-';
+    String bawahTipeId = adaKuasa ? (data.tipeIdentitasKuasa ?? '-') : '-';
+    String bawahNoId = adaKuasa ? (data.nomorIdentitasKuasa ?? '-') : '-';
 
     pdf.addPage(
       pw.Page(
@@ -113,9 +112,9 @@ class BnaPdfService {
                 padding: const pw.EdgeInsets.only(left: 10),
                 child: pw.Column(
                   children: [
-                    _buildRow('Nomor Layanan', data.nomorLayanan),
-                    _buildRow('Atas Nama', data.namaLama),
-                    _buildRow('Alamat', data.alamatPelanggan),
+                    _buildRow('Nomor Layanan', data.nomorLayanan ?? ''),
+                    _buildRow('Atas Nama', data.namaLama ?? ''),
+                    _buildRow('Alamat', data.alamatPelanggan ?? ''),
                   ],
                 ),
               ),
@@ -148,9 +147,9 @@ class BnaPdfService {
                 padding: const pw.EdgeInsets.only(left: 15),
                 child: pw.Column(
                   children: [
-                    _buildSubRow('a. Nama Lama', data.namaLama),
-                    _buildSubRow('b. Nama Baru', data.namaBaru),
-                    _buildSubRow('c. Keterangan', data.keterangan),
+                    _buildSubRow('a. Nama Lama', data.namaLama ?? ''),
+                    _buildSubRow('b. Nama Baru', data.namaBaru ?? ''),
+                    _buildSubRow('c. Keterangan', data.keterangan ?? ''),
                   ],
                 ),
               ),
@@ -190,7 +189,7 @@ class BnaPdfService {
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  // Kolom Kiri: Penerima Kuasa / Penanggung Jawab
+                  // Kolom Kiri: Penanggung Jawab Telkom / Kuasa
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
@@ -203,7 +202,7 @@ class BnaPdfService {
                         ),
                         pw.SizedBox(height: 45),
                         pw.Text(
-                          adaKuasa ? '(${data.namaKuasa})' : '(nama penanggung jawab)',
+                          adaKuasa ? '($namaKuasaStr)' : '(nama penanggung jawab)',
                           style: const pw.TextStyle(fontSize: 8),
                         ),
                       ],
@@ -247,7 +246,7 @@ class BnaPdfService {
                           ),
                         ),
                         pw.Text(
-                          '(${data.namaPelanggan})',
+                          '(${data.namaPelanggan ?? ''})',
                           style: const pw.TextStyle(fontSize: 8),
                         ),
                       ],
@@ -276,7 +275,7 @@ class BnaPdfService {
                   pw.Text(label, style: const pw.TextStyle(fontSize: 8.5))),
           pw.Text(': ', style: const pw.TextStyle(fontSize: 8.5)),
           pw.Expanded(
-              child: pw.Text(value.toString().isEmpty ? '' : value.toString(),
+              child: pw.Text(value.isEmpty ? '' : value,
                   style: const pw.TextStyle(fontSize: 8.5))),
         ],
       ),
@@ -294,7 +293,7 @@ class BnaPdfService {
                   pw.Text(label, style: const pw.TextStyle(fontSize: 8.5))),
           pw.Text(': ', style: const pw.TextStyle(fontSize: 8.5)),
           pw.Expanded(
-              child: pw.Text(value.toString().isEmpty ? '-' : value.toString(),
+              child: pw.Text(value.isEmpty ? '-' : value,
                   style: const pw.TextStyle(fontSize: 8.5))),
         ],
       ),
@@ -312,7 +311,7 @@ class BnaPdfService {
                   pw.Text(label, style: const pw.TextStyle(fontSize: 8.5))),
           pw.Text(': ', style: const pw.TextStyle(fontSize: 8.5)),
           pw.Expanded(
-              child: pw.Text(value.toString().isEmpty ? '-' : value.toString(),
+              child: pw.Text(value.isEmpty ? '-' : value,
                   style: const pw.TextStyle(fontSize: 8.5))),
         ],
       ),
