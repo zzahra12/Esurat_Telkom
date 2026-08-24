@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -23,14 +24,14 @@ class BukaIsolirPdfService {
         (data.namaKuasa ?? '').toString().trim().isNotEmpty &&
             (data.namaKuasa ?? '').toString().trim() != '-';
 
-    // 🔄 PEMETAAN DATA DISESUAIKAN:
+    // 🔄 PEMETAAN DATA:
     // ATAS: Selalu Data Pelanggan Utama
     String atasNama = data.namaPelanggan;
     String atasAlamat = data.alamatPelanggan;
     String atasTipeId = data.tipeIdentitasPelanggan;
     String atasNoId = data.nomorIdentitasPelanggan;
 
-    // BAWAH (TENGAH): Data Penerima Kuasa
+    // BAWAH (TENGAH): Data Penerima Kuasa (jika ada) atau '-'
     String bawahNama = adaKuasa ? data.namaKuasa : '-';
     String bawahAlamat = adaKuasa ? data.alamatKuasa : '-';
     String bawahTipeId = adaKuasa ? data.tipeIdentitasKuasa : '-';
@@ -178,11 +179,11 @@ class BukaIsolirPdfService {
               ),
               pw.SizedBox(height: 24),
 
-              // 8. DUA KOLOM TANDA TANGAN
+              // 8. DUA KOLOM TANDA TANGAN (PERBAIKAN NAMA & KUASA)
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  // Kolom Kiri: Penanggung Jawab Telkom
+                  // Kolom Kiri: Penanggung Jawab Telkom (Otomatis Yustika Monita)
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
@@ -195,16 +196,14 @@ class BukaIsolirPdfService {
                         ),
                         pw.SizedBox(height: 45),
                         pw.Text(
-                          adaKuasa
-                              ? '(${data.namaKuasa})'
-                              : '(nama yang menerima transaksi)',
+                          '(Yustika Monita)',
                           style: const pw.TextStyle(fontSize: 8),
                         ),
                       ],
                     ),
                   ),
 
-                  // Kolom Kanan: Pelanggan Utama
+                  // Kolom Kanan: Pelanggan (Penerima Kuasa / Pelanggan Utama)
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
@@ -241,7 +240,7 @@ class BukaIsolirPdfService {
                           ),
                         ),
                         pw.Text(
-                          '(${data.namaPelanggan})',
+                          '(${adaKuasa ? data.namaKuasa : data.namaPelanggan})',
                           style: const pw.TextStyle(fontSize: 8),
                         ),
                       ],

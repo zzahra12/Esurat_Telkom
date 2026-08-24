@@ -26,14 +26,14 @@ class DoPdfService {
         (data.namaKuasa ?? '').toString().trim().isNotEmpty &&
             (data.namaKuasa ?? '').toString().trim() != '-';
 
-    // 🔄 PERBAIKAN PEMETAAN:
+    // 🔄 PEMETAAN VARIABEL STANDARD TELKOM:
     // ATAS: Selalu Data Pelanggan Utama
     String atasNama = data.namaPelanggan;
     String atasAlamat = data.alamatPelanggan;
     String atasTipeId = data.tipeIdentitasPelanggan;
     String atasNoId = data.nomorIdentitasPelanggan;
 
-    // TENGAH: Data Penerima Kuasa
+    // TENGAH: Data Penerima Kuasa (jika ada) atau '-'
     String bawahNama = adaKuasa ? data.namaKuasa : '-';
     String bawahAlamat = adaKuasa ? data.alamatKuasa : '-';
     String bawahTipeId = adaKuasa ? data.tipeIdentitasKuasa : '-';
@@ -198,11 +198,11 @@ class DoPdfService {
               ),
               pw.SizedBox(height: 24),
 
-              // 7. DUA KOLOM TANDA TANGAN (SIMETRIS TERPUSAT)
+              // 7. DUA KOLOM TANDA TANGAN (PERBAIKAN NAMA & KUASA)
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  // Kolom Kiri: Penanggung Jawab Telkom / Kuasa
+                  // Kolom Kiri: Penanggung Jawab Telkom (Otomatis Yustika Monita)
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
@@ -215,14 +215,14 @@ class DoPdfService {
                         ),
                         pw.SizedBox(height: 45),
                         pw.Text(
-                          adaKuasa ? '(${data.namaKuasa})' : '(nama penanggung jawab)',
+                          '(Yustika Monita)',
                           style: const pw.TextStyle(fontSize: 8),
                         ),
                       ],
                     ),
                   ),
 
-                  // Kolom Kanan: Pelanggan Utama
+                  // Kolom Kanan: Pelanggan (Penerima Kuasa / Pelanggan Utama)
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
@@ -259,7 +259,7 @@ class DoPdfService {
                           ),
                         ),
                         pw.Text(
-                          '(${data.namaPelanggan})',
+                          '(${adaKuasa ? data.namaKuasa : data.namaPelanggan})',
                           style: const pw.TextStyle(fontSize: 8),
                         ),
                       ],

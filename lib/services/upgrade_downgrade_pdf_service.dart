@@ -231,11 +231,11 @@ class UpgradeDowngradePdfService {
               ),
               pw.SizedBox(height: 20),
 
-              // 8. DUA KOLOM TANDA TANGAN (SIMETRIS TERPUSAT)
+              // 8. DUA KOLOM TANDA TANGAN (PERBAIKAN NAMA & KUASA)
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  // Kolom Kiri: Penanggung Jawab Telkom / Kuasa
+                  // Kolom Kiri: Penanggung Jawab Telkom (Otomatis Yustika Monita)
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
@@ -248,14 +248,14 @@ class UpgradeDowngradePdfService {
                         ),
                         pw.SizedBox(height: 45),
                         pw.Text(
-                          adaKuasa ? '(${data.namaKuasa})' : '(nama penanggung jawab)',
+                          '(Yustika Monita)',
                           style: const pw.TextStyle(fontSize: 8),
                         ),
                       ],
                     ),
                   ),
 
-                  // Kolom Kanan: Pelanggan Utama
+                  // Kolom Kanan: Pelanggan (Penerima Kuasa / Pelanggan Utama)
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
@@ -292,7 +292,7 @@ class UpgradeDowngradePdfService {
                           ),
                         ),
                         pw.Text(
-                          '(${data.namaPelanggan})',
+                          '(${adaKuasa ? data.namaKuasa : data.namaPelanggan})',
                           style: const pw.TextStyle(fontSize: 8),
                         ),
                       ],
