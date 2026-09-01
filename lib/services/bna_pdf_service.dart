@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:open_file/open_file.dart';
@@ -18,6 +19,10 @@ class BnaPdfService {
     // Format tanggal real-time otomatis
     final String tanggalRealtime =
         'Banyuwangi, ${DateFormat('dd MMMM yyyy', 'id_ID').format(DateTime.now())}';
+
+    // 🖼️ LOAD GAMBAR TTD DARI ASSETS
+    final ttdBytes = await rootBundle.load('assets/images/ttd-telkom.jpg');
+    final ttdImage = pw.MemoryImage(ttdBytes.buffer.asUint8List());
 
     final pdf = pw.Document();
 
@@ -185,11 +190,11 @@ class BnaPdfService {
               ),
               pw.SizedBox(height: 24),
 
-              // 7. DUA KOLOM TANDA TANGAN (TELKOM & PELANGGAN/KUASA)
+              // 7. DUA KOLOM TANDA TANGAN (TELKOM DENGAN GAMBAR TTD & PELANGGAN/KUASA)
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  // Kolom Kiri: Penanggung Jawab Telkom (Otomatis Yustika Monita)
+                  // Kolom Kiri: Penanggung Jawab Telkom (Menggunakan Gambar TTD)
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
@@ -200,7 +205,14 @@ class BnaPdfService {
                           style: pw.TextStyle(
                               fontSize: 9, fontWeight: pw.FontWeight.bold),
                         ),
-                        pw.SizedBox(height: 45),
+                        pw.SizedBox(height: 4),
+                        // 🖼️ FOTO TANDA TANGAN
+                        pw.Image(
+                          ttdImage,
+                          height: 38,
+                          fit: pw.BoxFit.contain,
+                        ),
+                        pw.SizedBox(height: 3),
                         pw.Text(
                           '(Yustika Monita)',
                           style: const pw.TextStyle(fontSize: 8),
