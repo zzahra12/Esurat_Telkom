@@ -11,16 +11,24 @@ class FormDoPage extends StatefulWidget {
 }
 
 class _FormDoPageState extends State<FormDoPage> {
-  // Data Pelanggan
+  // Data Pelanggan Utama
   final _namaPelangganController = TextEditingController();
   final _tipeIdentitasPelangganController = TextEditingController(text: 'KTP');
   final _nomorIdentitasPelangganController = TextEditingController();
   final _alamatPelangganController = TextEditingController();
   final _nomorLayananController = TextEditingController();
+  final _atasNamaLayananController = TextEditingController();
+  final _alamatLokasiLayananController = TextEditingController();
 
   // Detail Permohonan DO
+  final _namaTransaksiController = TextEditingController(text: 'Berhenti Berlangganan');
   final _keteranganController = TextEditingController();
   final _tagihanController = TextEditingController();
+  final _keteranganTambahanController = TextEditingController();
+
+  // Penanggung Jawab Telkom & Checkbox TTD
+  final _namaPjTelkomController = TextEditingController(text: 'Yustika Monita');
+  bool _tampilkanTtdTelkom = true;
 
   // Penerima Kuasa (Opsional)
   final _namaKuasaController = TextEditingController();
@@ -32,10 +40,13 @@ class _FormDoPageState extends State<FormDoPage> {
 
   Future<void> _prosesCetakPdf() async {
     if (_namaPelangganController.text.isEmpty ||
+        _alamatPelangganController.text.isEmpty ||
         _nomorIdentitasPelangganController.text.isEmpty ||
-        _nomorLayananController.text.isEmpty) {
+        _nomorLayananController.text.isEmpty ||
+        _atasNamaLayananController.text.isEmpty ||
+        _alamatLokasiLayananController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lengkapi Data Pelanggan dan Nomor Layanan!')),
+        const SnackBar(content: Text('Lengkapi Semua Data Wajib Berhenti Berlangganan!')),
       );
       return;
     }
@@ -53,18 +64,22 @@ class _FormDoPageState extends State<FormDoPage> {
         tipeIdentitasPelanggan: _tipeIdentitasPelangganController.text,
         nomorIdentitasPelanggan: _nomorIdentitasPelangganController.text,
         nomorLayanan: _nomorLayananController.text,
+        atasNamaLayanan: _atasNamaLayananController.text,
+        alamatLokasiLayanan: _alamatLokasiLayananController.text,
+        namaTransaksi: _namaTransaksiController.text.isEmpty ? '-' : _namaTransaksiController.text,
         keterangan: _keteranganController.text.isEmpty ? '-' : _keteranganController.text,
         tagihan: _tagihanController.text.isEmpty ? '-' : _tagihanController.text,
+        keteranganTambahan: _keteranganTambahanController.text.isEmpty ? '-' : _keteranganTambahanController.text,
+        namaPjTelkom: _namaPjTelkomController.text,
+        tampilkanTtdTelkom: _tampilkanTtdTelkom,
       );
 
-      // 1. Generate PDF Bytes
       final pdfBytes = await DoPdfService.generatePdf(data);
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final fileName = 'Surat_DO_${_namaPelangganController.text.replaceAll(' ', '_')}_$timestamp.pdf';
 
       if (!mounted) return;
 
-      // 2. Navigasi ke Halaman Preview Surat
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -87,7 +102,6 @@ class _FormDoPageState extends State<FormDoPage> {
     }
   }
 
-  // Helper Widget dengan desain Outlined Border
   Widget _buildInputField({
     required String label,
     required TextEditingController controller,
@@ -155,7 +169,7 @@ class _FormDoPageState extends State<FormDoPage> {
               controller: _namaPelangganController,
             ),
             _buildInputField(
-              label: 'Alamat Pelanggan *',
+              label: 'Alamat Pelanggan (Sesuai KTP) *',
               controller: _alamatPelangganController,
               maxLines: 2,
             ),
@@ -173,20 +187,62 @@ class _FormDoPageState extends State<FormDoPage> {
               controller: _nomorLayananController,
               keyboardType: TextInputType.number,
             ),
+            _buildInputField(
+              label: 'Atas Nama Layanan (Nama Kantor / Usaha / Sekolah) *',
+              controller: _atasNamaLayananController,
+            ),
+            _buildInputField(
+              label: 'Alamat Lokasi Layanan (Pemasangan) *',
+              controller: _alamatLokasiLayananController,
+              maxLines: 2,
+            ),
 
             const SizedBox(height: 12),
             const Text('DETAIL BERHENTI BERLANGGANAN', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF140F47))),
             const SizedBox(height: 12),
 
             _buildInputField(
-              label: 'Keterangan / Alasan Berhenti (Opsional)',
+              label: 'Nama Transaksi *',
+              controller: _namaTransaksiController,
+            ),
+            _buildInputField(
+              label: 'Keterangan / Alasan Berhenti *',
               controller: _keteranganController,
               maxLines: 2,
             ),
             _buildInputField(
-              label: 'Informasi Tagihan (Opsional)',
+              label: 'Informasi Tagihan *',
               controller: _tagihanController,
             ),
+            _buildInputField(
+              label: 'Keterangan Tambahan (Opsional)',
+              controller: _keteranganTambahanController,
+              maxLines: 2,
+            ),
+
+            _buildInputField(
+              label: 'Nama Penanggung Jawab Telkom',
+              controller: _namaPjTelkomController,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: _tampilkanTtdTelkom,
+                  activeColor: const Color(0xFF140F47),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _tampilkanTtdTelkom = value ?? true;
+                    });
+                  },
+                ),
+                const Text(
+                  'Tempelkan Tanda Tangan Telkom',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
 
             ExpansionTile(
               title: const Text('Isi Data Pemberi Kuasa (Opsional)', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54)),
@@ -200,7 +256,7 @@ class _FormDoPageState extends State<FormDoPage> {
                   controller: _tipeIdentitasKuasaController,
                 ),
                 _buildInputField(
-                  label: 'Nomor Identitas Pemberi Kuasa',
+                  label: 'Nomor Identitas Kuasa',
                   controller: _nomorIdentitasKuasaController,
                 ),
                 _buildInputField(

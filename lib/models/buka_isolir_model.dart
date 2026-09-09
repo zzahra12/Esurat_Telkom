@@ -1,28 +1,37 @@
 class BukaIsolirModel {
-  // Data Yang Bertanda Tangan (Penerima Kuasa) - Opsional
-  final String namaKuasa;
-  final String alamatKuasa;
-  final String tipeIdentitasKuasa;
-  final String nomorIdentitasKuasa;
-
-  // Data Pelanggan
   final String namaPelanggan;
-  final String alamatPelanggan;
   final String tipeIdentitasPelanggan;
   final String nomorIdentitasPelanggan;
-
-  // Data Layanan
+  final String alamatPelanggan;
   final String nomorLayanan;
+  final String? namaPerusahaan;
+  final String? alamatPemasangan;
+  final String? keterangan;
+  
+  // Tambahkan dua baris ini:
+  final String? namaPjTelkom;
+  final bool? tampilkanTtdTelkom;
+
+  // Opsional Kuasa
+  final String? namaKuasa;
+  final String? tipeIdentitasKuasa;
+  final String? nomorIdentitasKuasa;
+  final String? alamatKuasa;
 
   BukaIsolirModel({
-    this.namaKuasa = '',
-    this.alamatKuasa = '',
-    this.tipeIdentitasKuasa = '',
-    this.nomorIdentitasKuasa = '',
     required this.namaPelanggan,
-    required this.alamatPelanggan,
     required this.tipeIdentitasPelanggan,
     required this.nomorIdentitasPelanggan,
+    required this.alamatPelanggan,
     required this.nomorLayanan,
+    this.namaPerusahaan,
+    this.alamatPemasangan,
+    this.keterangan,
+    this.namaPjTelkom,
+    this.tampilkanTtdTelkom,
+    this.namaKuasa,
+    this.tipeIdentitasKuasa,
+    this.nomorIdentitasKuasa,
+    this.alamatKuasa,
   });
 }

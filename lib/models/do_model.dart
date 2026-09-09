@@ -13,11 +13,18 @@ class DoModel {
 
   // Data Layanan
   final String nomorLayanan;
+  final String atasNamaLayanan;
+  final String alamatLokasiLayanan;
 
   // Detail Berhenti Berlangganan (DO)
   final String namaTransaksi;
   final String keterangan;
   final String tagihan;
+  final String keteranganTambahan;
+
+  // Penanggung Jawab Telkom
+  final String namaPjTelkom;
+  final bool tampilkanTtdTelkom;
 
   DoModel({
     this.namaKuasa = '',
@@ -29,8 +36,13 @@ class DoModel {
     required this.tipeIdentitasPelanggan,
     required this.nomorIdentitasPelanggan,
     required this.nomorLayanan,
-    this.namaTransaksi = 'Berhenti Berlangganan Layanan Indibiz',
+    required this.atasNamaLayanan,
+    required this.alamatLokasiLayanan,
+    this.namaTransaksi = 'Berhenti Berlangganan',
     this.keterangan = '-',
     this.tagihan = '-',
+    this.keteranganTambahan = '-',
+    this.namaPjTelkom = 'nama yang menerima transaksi',
+    this.tampilkanTtdTelkom = true,
   });
 }

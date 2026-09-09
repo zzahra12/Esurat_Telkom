@@ -11,16 +11,25 @@ class FormBukaIsolirPage extends StatefulWidget {
 }
 
 class _FormBukaIsolirPageState extends State<FormBukaIsolirPage> {
-  // Controller Pelanggan
+  // Controller Pelanggan Utama
   final _namaPelangganController = TextEditingController();
   final _tipeIdentitasPelangganController = TextEditingController(text: 'KTP');
   final _nomorIdentitasPelangganController = TextEditingController();
   final _alamatPelangganController = TextEditingController();
   final _nomorLayananController = TextEditingController();
 
+  // Controller Detail Layanan & Penanggung Jawab Telkom
+  final _namaPerusahaanController = TextEditingController();
+  final _alamatPemasanganController = TextEditingController();
+  final _keteranganController = TextEditingController();
+  final _namaPjTelkomController = TextEditingController(text: 'Yustika Monita');
+  
+  // 🔲 State untuk Checkbox Tanda Tangan
+  bool _tampilkanTtdTelkom = true;
+
   // Controller Penerima Kuasa (Opsional)
   final _namaKuasaController = TextEditingController();
-  final _tipeIdentitasKuasaController = TextEditingController();
+  final _tipeIdentitasKuasaController = TextEditingController(text: 'KTP');
   final _nomorIdentitasKuasaController = TextEditingController();
   final _alamatKuasaController = TextEditingController();
 
@@ -29,9 +38,12 @@ class _FormBukaIsolirPageState extends State<FormBukaIsolirPage> {
   Future<void> _prosesCetakPdf() async {
     if (_namaPelangganController.text.isEmpty ||
         _nomorIdentitasPelangganController.text.isEmpty ||
-        _nomorLayananController.text.isEmpty) {
+        _nomorLayananController.text.isEmpty ||
+        _namaPerusahaanController.text.isEmpty ||
+        _alamatPemasanganController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lengkapi Data Pelanggan dan Nomor Layanan!')),
+        const SnackBar(
+            content: Text('Lengkapi Data Pelanggan, Layanan, dan Alamat Pemasangan!')),
       );
       return;
     }
@@ -40,25 +52,31 @@ class _FormBukaIsolirPageState extends State<FormBukaIsolirPage> {
 
     try {
       final data = BukaIsolirModel(
-        namaKuasa: _namaKuasaController.text,
-        alamatKuasa: _alamatKuasaController.text,
-        tipeIdentitasKuasa: _tipeIdentitasKuasaController.text,
-        nomorIdentitasKuasa: _nomorIdentitasKuasaController.text,
         namaPelanggan: _namaPelangganController.text,
-        alamatPelanggan: _alamatPelangganController.text,
         tipeIdentitasPelanggan: _tipeIdentitasPelangganController.text,
         nomorIdentitasPelanggan: _nomorIdentitasPelangganController.text,
+        alamatPelanggan: _alamatPelangganController.text,
         nomorLayanan: _nomorLayananController.text,
+        namaPerusahaan: _namaPerusahaanController.text,
+        alamatPemasangan: _alamatPemasanganController.text,
+        keterangan: _keteranganController.text,
+        // Data TTD Telkom
+        namaPjTelkom: _namaPjTelkomController.text,
+        tampilkanTtdTelkom: _tampilkanTtdTelkom,
+        // Data Kuasa
+        namaKuasa: _namaKuasaController.text,
+        tipeIdentitasKuasa: _tipeIdentitasKuasaController.text,
+        nomorIdentitasKuasa: _nomorIdentitasKuasaController.text,
+        alamatKuasa: _alamatKuasaController.text,
       );
 
-      // 1. Generate PDF Bytes
       final pdfBytes = await BukaIsolirPdfService.generatePdf(data);
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final fileName = 'Surat_Buka_Isolir_${_namaPelangganController.text.replaceAll(' ', '_')}_$timestamp.pdf';
+      final fileName =
+          'Surat_Buka_Isolir_${_namaPelangganController.text.replaceAll(' ', '_')}_$timestamp.pdf';
 
       if (!mounted) return;
 
-      // 2. Navigasi ke Halaman Preview Surat
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -81,7 +99,6 @@ class _FormBukaIsolirPageState extends State<FormBukaIsolirPage> {
     }
   }
 
-  // Helper Widget yang disesuaikan dengan desain Outlined Border
   Widget _buildInputField({
     required String label,
     required TextEditingController controller,
@@ -105,7 +122,8 @@ class _FormBukaIsolirPageState extends State<FormBukaIsolirPage> {
           alignLabelWithHint: true,
           filled: true,
           fillColor: const Color(0xFFFAFAFA),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: Color(0xFF757575), width: 1),
@@ -152,7 +170,8 @@ class _FormBukaIsolirPageState extends State<FormBukaIsolirPage> {
             // Section 1: Data Pelanggan
             const Text(
               '--- DATA PELANGGAN ---',
-              style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF140F47)),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Color(0xFF140F47)),
             ),
             const SizedBox(height: 12),
             _buildInputField(
@@ -169,7 +188,7 @@ class _FormBukaIsolirPageState extends State<FormBukaIsolirPage> {
               keyboardType: TextInputType.number,
             ),
             _buildInputField(
-              label: 'Alamat *',
+              label: 'Alamat Pelanggan (Sesuai KTP) *',
               controller: _alamatPelangganController,
               maxLines: 3,
             ),
@@ -178,13 +197,62 @@ class _FormBukaIsolirPageState extends State<FormBukaIsolirPage> {
               controller: _nomorLayananController,
               keyboardType: TextInputType.number,
             ),
+            _buildInputField(
+              label: 'Atas Nama Layanan (Nama Kantor / Usaha / Sekolah) *',
+              controller: _namaPerusahaanController,
+            ),
+            _buildInputField(
+              label: 'Alamat Lokasi Layanan (Pemasangan) *',
+              controller: _alamatPemasanganController,
+              maxLines: 3,
+            ),
 
+            const SizedBox(height: 8),
+            const Text(
+              '--- DETAIL BUKA ISOLIR SEMENTARA ---',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Color(0xFF140F47)),
+            ),
             const SizedBox(height: 12),
+            _buildInputField(
+              label: 'Keterangan / Catatan Tambahan (Opsional)',
+              controller: _keteranganController,
+              maxLines: 2,
+            ),
+            _buildInputField(
+              label: 'Nama Penanggung Jawab Telkom',
+              controller: _namaPjTelkomController,
+            ),
+
+            // 🔲 Checkbox Tanda Tangan Telkom
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: _tampilkanTtdTelkom,
+                  activeColor: const Color(0xFF140F47),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _tampilkanTtdTelkom = value ?? true;
+                    });
+                  },
+                ),
+                const Text(
+                  'Tempelkan Tanda Tangan Yustika Monita',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
             // Section 2: Kuasa (Opsional)
             ExpansionTile(
               title: const Text(
                 'Isi Data Pemberi Kuasa (Opsional)',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black54),
               ),
               children: [
                 _buildInputField(
@@ -209,13 +277,13 @@ class _FormBukaIsolirPageState extends State<FormBukaIsolirPage> {
 
             const SizedBox(height: 24),
 
-            // Tombol Lanjutkan / Cetak
+            // Tombol Lanjutkan
             SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF140F47), // Warna navy blue khas aplikasi
+                  backgroundColor: const Color(0xFF140F47),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

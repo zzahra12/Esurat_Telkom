@@ -13,32 +13,29 @@ import '../models/gno_model.dart';
 
 class GnoPdfService {
   static Future<Uint8List> generatePdf(GnoModel data) async {
-    // Inisialisasi locale tanggal Bahasa Indonesia
     await initializeDateFormatting('id_ID', null);
 
-    // Format tanggal real-time otomatis
     final String tanggalRealtime =
         'Banyuwangi, ${DateFormat('dd MMMM yyyy', 'id_ID').format(DateTime.now())}';
 
     // 🖼️ LOAD GAMBAR TTD DARI ASSETS
-    final ttdBytes = await rootBundle.load('assets/images/ttd-telkom.jpg');
-    final ttdImage = pw.MemoryImage(ttdBytes.buffer.asUint8List());
+    pw.MemoryImage? ttdImage;
+    try {
+      final ttdBytes = await rootBundle.load('assets/images/ttd-telkom.jpg');
+      ttdImage = pw.MemoryImage(ttdBytes.buffer.asUint8List());
+    } catch (_) {}
 
     final pdf = pw.Document();
 
-    // Cek ketersediaan data Penerima Kuasa
     final bool adaKuasa =
-        (data.namaKuasa ?? '').toString().trim().isNotEmpty &&
-            (data.namaKuasa ?? '').toString().trim() != '-';
+        (data.namaKuasa).toString().trim().isNotEmpty &&
+            (data.namaKuasa).toString().trim() != '-';
 
-    // 🔄 PEMETAAN VARIABEL STANDARD TELKOM:
-    // ATAS: Selalu Data Pelanggan Utama
     String atasNama = data.namaPelanggan;
     String atasAlamat = data.alamatPelanggan;
     String atasTipeId = data.tipeIdentitasPelanggan;
     String atasNoId = data.nomorIdentitasPelanggan;
 
-    // TENGAH: Data Penerima Kuasa (jika ada) atau '-'
     String bawahNama = adaKuasa ? data.namaKuasa : '-';
     String bawahAlamat = adaKuasa ? data.alamatKuasa : '-';
     String bawahTipeId = adaKuasa ? data.tipeIdentitasKuasa : '-';
@@ -65,7 +62,7 @@ class GnoPdfService {
               ),
               pw.SizedBox(height: 18),
 
-              // 2. BAGIAN ATAS: YANG BERTANDA TANGAN DI BAWAH INI (DATA PELANGGAN)
+              // 2. BAGIAN ATAS: DATA PELANGGAN
               pw.Text('Yang bertanda tangan di bawah ini :',
                   style: const pw.TextStyle(fontSize: 9)),
               pw.SizedBox(height: 4),
@@ -90,7 +87,7 @@ class GnoPdfService {
               ),
               pw.SizedBox(height: 6),
 
-              // 3. BAGIAN TENGAH: BERTINDAK UNTUK DAN ATAS NAMA (DATA KUASA)
+              // 3. BAGIAN TENGAH: DATA KUASA
               pw.Text('Bertindak untuk dan atas nama :',
                   style: const pw.TextStyle(fontSize: 9)),
               pw.SizedBox(height: 4),
@@ -118,8 +115,8 @@ class GnoPdfService {
                 child: pw.Column(
                   children: [
                     _buildRow('Nomor Layanan', data.nomorLayanan),
-                    _buildRow('Atas Nama', data.namaPelanggan),
-                    _buildRow('Alamat', data.alamatPelanggan),
+                    _buildRow('Atas Nama', data.atasNamaLayanan),
+                    _buildRow('Alamat', data.alamatLokasiLayanan),
                   ],
                 ),
               ),
@@ -193,38 +190,50 @@ class GnoPdfService {
               ),
               pw.SizedBox(height: 24),
 
-              // 7. DUA KOLOM TANDA TANGAN (TELKOM DENGAN GAMBAR TTD & PELANGGAN/KUASA)
+              // 7. DUA KOLOM TANDA TANGAN (SEJAJAR & RUANG MATERAI / TTD LEGA)
               pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  // Kolom Kiri: Penanggung Jawab Telkom (Menggunakan Gambar TTD)
+                  // Kolom Kiri: Penanggung Jawab Telkom
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
                       children: [
-                        pw.SizedBox(height: 12),
+                        // Spacer transparan agar sejajar dengan baris tanggal di sebelah kanan
+                        pw.SizedBox(height: 11), 
                         pw.Text(
                           'Penanggung Jawab Telkom',
                           style: pw.TextStyle(
                               fontSize: 9, fontWeight: pw.FontWeight.bold),
                         ),
                         pw.SizedBox(height: 4),
-                        // 🖼️ FOTO TANDA TANGAN AUTOMATIS
-                        pw.Image(
-                          ttdImage,
-                          height: 38,
-                          fit: pw.BoxFit.contain,
+                        pw.SizedBox(
+                          height: 55,
+                          child: pw.Column(
+                            mainAxisAlignment: pw.MainAxisAlignment.center,
+                            children: [
+                              if (data.tampilkanTtdTelkom && ttdImage != null)
+                                pw.Image(
+                                  ttdImage,
+                                  height: 38,
+                                  fit: pw.BoxFit.contain,
+                                )
+                              else
+                                pw.SizedBox(height: 38),
+                            ],
+                          ),
                         ),
-                        pw.SizedBox(height: 3),
+                        pw.SizedBox(height: 4),
                         pw.Text(
-                          '(Yustika Monita)',
+                          '(${data.namaPjTelkom})',
                           style: const pw.TextStyle(fontSize: 8),
                         ),
                       ],
                     ),
                   ),
 
-                  // Kolom Kanan: Pelanggan (Penerima Kuasa / Pelanggan Utama)
+                  // Kolom Kanan: Pelanggan (Dengan Kotak Materai Fisik 10.000)
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
@@ -242,26 +251,40 @@ class GnoPdfService {
                         pw.Padding(
                           padding: const pw.EdgeInsets.only(right: 15.0),
                           child: pw.SizedBox(
-                            height: 35,
+                            height: 55, // Ruang lega pas untuk penempelan materai fisik asli
                             child: pw.Column(
                               mainAxisAlignment: pw.MainAxisAlignment.center,
                               children: [
-                                pw.Text(
-                                  'Materai',
-                                  style: const pw.TextStyle(
-                                      fontSize: 7, color: PdfColors.black),
-                                ),
-                                pw.Text(
-                                  '10.000',
-                                  style: const pw.TextStyle(
-                                      fontSize: 7, color: PdfColors.black),
+                                pw.Container(
+                                  width: 34,
+                                  height: 30,
+                                  alignment: pw.Alignment.center,
+                                  decoration: pw.BoxDecoration(
+                                    border: pw.Border.all(
+                                        color: PdfColors.grey700, width: 0.8),
+                                  ),
+                                  child: pw.Column(
+                                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                                    children: [
+                                      pw.Text(
+                                        'Materai',
+                                        style: const pw.TextStyle(
+                                            fontSize: 6.5, color: PdfColors.black),
+                                      ),
+                                      pw.Text(
+                                        '10.000',
+                                        style: const pw.TextStyle(
+                                            fontSize: 6.5, color: PdfColors.black),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
                         pw.Text(
-                          '(${adaKuasa ? data.namaKuasa : data.namaPelanggan})',
+                          '(${data.namaPelanggan})',
                           style: const pw.TextStyle(fontSize: 8),
                         ),
                       ],
@@ -278,7 +301,6 @@ class GnoPdfService {
     return pdf.save();
   }
 
-  // Helper Baris Utama
   static pw.Widget _buildRow(String label, String value) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 1.5),
@@ -297,7 +319,6 @@ class GnoPdfService {
     );
   }
 
-  // Helper Sub Baris
   static pw.Widget _buildSubRow(String label, String value) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 1),

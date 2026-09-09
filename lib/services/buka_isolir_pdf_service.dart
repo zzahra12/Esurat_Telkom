@@ -19,8 +19,11 @@ class BukaIsolirPdfService {
         'Banyuwangi, ${DateFormat('dd MMMM yyyy', 'id_ID').format(DateTime.now())}';
 
     // 🖼️ LOAD GAMBAR TTD DARI ASSETS
-    final ttdBytes = await rootBundle.load('assets/images/ttd-telkom.jpg');
-    final ttdImage = pw.MemoryImage(ttdBytes.buffer.asUint8List());
+    pw.MemoryImage? ttdImage;
+    try {
+      final ttdBytes = await rootBundle.load('assets/images/ttd-telkom.jpg');
+      ttdImage = pw.MemoryImage(ttdBytes.buffer.asUint8List());
+    } catch (_) {}
 
     final pdf = pw.Document();
 
@@ -30,17 +33,16 @@ class BukaIsolirPdfService {
             (data.namaKuasa ?? '').toString().trim() != '-';
 
     // 🔄 PEMETAAN DATA:
-    // ATAS: Selalu Data Pelanggan Utama
     String atasNama = data.namaPelanggan;
     String atasAlamat = data.alamatPelanggan;
     String atasTipeId = data.tipeIdentitasPelanggan;
     String atasNoId = data.nomorIdentitasPelanggan;
 
-    // BAWAH (TENGAH): Data Penerima Kuasa (jika ada) atau '-'
-    String bawahNama = adaKuasa ? data.namaKuasa : '-';
-    String bawahAlamat = adaKuasa ? data.alamatKuasa : '-';
-    String bawahTipeId = adaKuasa ? data.tipeIdentitasKuasa : '-';
-    String bawahNoId = adaKuasa ? data.nomorIdentitasKuasa : '-';
+   // 🔄 PEMETAAN DATA PENERIMA KUASA
+    String bawahNama = adaKuasa ? (data.namaKuasa ?? '-') : '-';
+    String bawahAlamat = adaKuasa ? (data.alamatKuasa ?? '-') : '-';
+    String bawahTipeId = adaKuasa ? (data.tipeIdentitasKuasa ?? '-') : '-';
+    String bawahNoId = adaKuasa ? (data.nomorIdentitasKuasa ?? '-') : '-';
 
     pdf.addPage(
       pw.Page(
@@ -55,7 +57,7 @@ class BukaIsolirPdfService {
                 child: pw.Text(
                   'SURAT PERMINTAAN BUKA ISOLIR SEMENTARA LAYANAN',
                   style: pw.TextStyle(
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: pw.FontWeight.bold,
                     decoration: pw.TextDecoration.underline,
                   ),
@@ -65,7 +67,7 @@ class BukaIsolirPdfService {
 
               // 2. BAGIAN ATAS: DATA PELANGGAN
               pw.Text('Yang bertanda tangan di bawah ini :',
-                  style: const pw.TextStyle(fontSize: 9)),
+                  style: const pw.TextStyle(fontSize: 9.5)),
               pw.SizedBox(height: 3),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
@@ -82,7 +84,7 @@ class BukaIsolirPdfService {
               pw.Text(
                 '(*diisi bila mutasi dilakukan oleh pihak penerima kuasa dari PELANGGAN)',
                 style: pw.TextStyle(
-                  fontSize: 8,
+                  fontSize: 8.5,
                   fontStyle: pw.FontStyle.italic,
                   fontWeight: pw.FontWeight.bold,
                 ),
@@ -91,7 +93,7 @@ class BukaIsolirPdfService {
 
               // 3. BAGIAN TENGAH: DATA PENERIMA KUASA
               pw.Text('Bertindak untuk dan atas nama:',
-                  style: const pw.TextStyle(fontSize: 9)),
+                  style: const pw.TextStyle(fontSize: 9.5)),
               pw.SizedBox(height: 3),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
@@ -109,7 +111,7 @@ class BukaIsolirPdfService {
               // 4. DETAIL LAYANAN
               pw.Text(
                 'Selanjutnya disebut sebagai "PELANGGAN", selaku pihak yang berlangganan layanan sebagai berikut:',
-                style: const pw.TextStyle(fontSize: 8.5),
+                style: const pw.TextStyle(fontSize: 9),
               ),
               pw.SizedBox(height: 4),
               pw.Padding(
@@ -118,7 +120,7 @@ class BukaIsolirPdfService {
                   children: [
                     _buildRow('Nomor Layanan', data.nomorLayanan),
                     _buildRow('Atas Nama', data.namaPelanggan),
-                    _buildRow('Alamat', data.alamatPelanggan),
+                    _buildRow('Alamat', data.alamatPelanggan),   
                   ],
                 ),
               ),
@@ -129,13 +131,13 @@ class BukaIsolirPdfService {
                 child: pw.Text(
                   'MENYATAKAN',
                   style: pw.TextStyle(
-                      fontSize: 10, fontWeight: pw.FontWeight.bold),
+                      fontSize: 10.5, fontWeight: pw.FontWeight.bold),
                 ),
               ),
               pw.SizedBox(height: 6),
               pw.Text(
                 'BAHWA, PELANGGAN adalah benar pihak yang berlangganan Layanan Indibiz berdasarkan Kontrak Berlangganan, dan dengan ini mengajukan permintaan Buka Isolir Sementara Layanan Indibiz, sebagai berikut:',
-                style: const pw.TextStyle(fontSize: 8.5),
+                style: const pw.TextStyle(fontSize: 9),
                 textAlign: pw.TextAlign.justify,
               ),
               pw.SizedBox(height: 10),
@@ -144,7 +146,7 @@ class BukaIsolirPdfService {
               pw.Text(
                 'Jenis Permohonan : Isolir',
                 style:
-                    pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+                    pw.TextStyle(fontSize: 9.5, fontWeight: pw.FontWeight.bold),
               ),
               pw.SizedBox(height: 3),
               pw.Padding(
@@ -155,17 +157,17 @@ class BukaIsolirPdfService {
               pw.SizedBox(height: 12),
 
               // 7. KETERANGAN TAMBAHAN
-              pw.Text('Keterangan Tambahan:',
-                  style: const pw.TextStyle(fontSize: 8.5)),
+              pw.Text('Keterangan Tambahan :',
+                  style: const pw.TextStyle(fontSize: 9)),
               pw.SizedBox(height: 2),
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 8)),
+                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 8.5)),
                   pw.Expanded(
                     child: pw.Text(
                       'Permohonan ini berlaku sejak ditandatanganinya Surat Permintaan Buka Isolir Sementara Layanan Indibiz ini.',
-                      style: const pw.TextStyle(fontSize: 8),
+                      style: const pw.TextStyle(fontSize: 8.5),
                     ),
                   ),
                 ],
@@ -173,87 +175,103 @@ class BukaIsolirPdfService {
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 8)),
+                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 8.5)),
                   pw.Expanded(
                     child: pw.Text(
                       'Surat Permintaan Buka Isolir Sementara Layanan Indibiz ini merupakan satu kesatuan yang tidak terpisahkan dengan Kontrak Berlangganan yang telah ditandatangani PT Telkom Indonesia (Persero) Tbk dengan PELANGGAN.',
-                      style: const pw.TextStyle(fontSize: 8),
+                      style: const pw.TextStyle(fontSize: 8.5),
                     ),
                   ),
                 ],
               ),
-              pw.SizedBox(height: 24),
+              pw.SizedBox(height: 30),
 
-              // 8. DUA KOLOM TANDA TANGAN (TELKOM DENGAN GAMBAR TTD & PELANGGAN/KUASA)
+              // 8. DUA KOLOM TANDA TANGAN (SEJAJAR SEMPURNA DENGAN HEADER)
               pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  // Kolom Kiri: Penanggung Jawab Telkom (Menggunakan Gambar TTD)
+                  // Kolom Kiri: Penanggung Jawab Telkom (Diberi SizedBox agar sejajar dengan Tanggal di kanan)
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
                       children: [
-                        pw.SizedBox(height: 12),
+                        // Spasi kosong setara tinggi teks tanggal di sebelah kanan agar judul sejajar
+                        pw.SizedBox(height: 12), 
                         pw.Text(
                           'Penanggung Jawab Telkom',
                           style: pw.TextStyle(
-                              fontSize: 9, fontWeight: pw.FontWeight.bold),
+                              fontSize: 9.5, fontWeight: pw.FontWeight.bold),
                         ),
-                        pw.SizedBox(height: 4),
-                        // 🖼️ FOTO TANDA TANGAN AUTOMATIS
-                        pw.Image(
-                          ttdImage,
-                          height: 38,
-                          fit: pw.BoxFit.contain,
-                        ),
-                        pw.SizedBox(height: 3),
+                        pw.SizedBox(height: 8),
+                        if (data.tampilkanTtdTelkom == true && ttdImage != null)
+                          pw.Image(
+                            ttdImage,
+                            height: 45,
+                            fit: pw.BoxFit.contain,
+                          )
+                        else
+                          pw.SizedBox(height: 45),
+                        pw.SizedBox(height: 6),
                         pw.Text(
-                          '(Yustika Monita)',
-                          style: const pw.TextStyle(fontSize: 8),
+                          '(${data.namaPjTelkom ?? 'Yustika Monita'})',
+                          style: const pw.TextStyle(fontSize: 9),
                         ),
                       ],
                     ),
                   ),
 
-                  // Kolom Kanan: Pelanggan (Penerima Kuasa / Pelanggan Utama)
+                  // Kolom Kanan: Pelanggan (Tanggal di paling atas)
                   pw.Expanded(
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
                       children: [
                         pw.Text(
                           tanggalRealtime,
-                          style: const pw.TextStyle(fontSize: 8),
+                          style: const pw.TextStyle(fontSize: 8.5),
                         ),
                         pw.SizedBox(height: 4),
                         pw.Text(
                           'Pelanggan',
                           style: pw.TextStyle(
-                              fontSize: 9, fontWeight: pw.FontWeight.bold),
+                              fontSize: 9.5, fontWeight: pw.FontWeight.bold),
                         ),
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.only(right: 15.0),
-                          child: pw.SizedBox(
-                            height: 35,
-                            child: pw.Column(
-                              mainAxisAlignment: pw.MainAxisAlignment.center,
-                              children: [
-                                pw.Text(
-                                  'Materai',
-                                  style: const pw.TextStyle(
-                                      fontSize: 7, color: PdfColors.black),
+                        pw.SizedBox(height: 4),
+                        pw.SizedBox(
+                          height: 38,
+                          child: pw.Column(
+                            mainAxisAlignment: pw.MainAxisAlignment.center,
+                            children: [
+                              pw.Container(
+                                padding: const pw.EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                decoration: pw.BoxDecoration(
+                                  border: pw.Border.all(
+                                      color: PdfColors.grey700, width: 0.8),
                                 ),
-                                pw.Text(
-                                  '10.000',
-                                  style: const pw.TextStyle(
-                                      fontSize: 7, color: PdfColors.black),
+                                child: pw.Column(
+                                  mainAxisSize: pw.MainAxisSize.min,
+                                  children: [
+                                    pw.Text(
+                                      'Materai',
+                                      style: const pw.TextStyle(
+                                          fontSize: 7, color: PdfColors.black),
+                                    ),
+                                    pw.Text(
+                                      '10.000',
+                                      style: const pw.TextStyle(
+                                          fontSize: 7, color: PdfColors.black),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
+                        pw.SizedBox(height: 15),
                         pw.Text(
-                          '(${adaKuasa ? data.namaKuasa : data.namaPelanggan})',
-                          style: const pw.TextStyle(fontSize: 8),
+                          '($atasNama)',
+                          style: const pw.TextStyle(fontSize: 9),
                         ),
                       ],
                     ),
@@ -277,12 +295,12 @@ class BukaIsolirPdfService {
           pw.SizedBox(
               width: 120,
               child:
-                  pw.Text(label, style: const pw.TextStyle(fontSize: 8.5))),
-          pw.Text(': ', style: const pw.TextStyle(fontSize: 8.5)),
+                  pw.Text(label, style: const pw.TextStyle(fontSize: 9))),
+          pw.Text(': ', style: const pw.TextStyle(fontSize: 9)),
           pw.Expanded(
               child: pw.Text(
                   value.toString().isEmpty ? '-' : value.toString(),
-                  style: const pw.TextStyle(fontSize: 8.5))),
+                  style: const pw.TextStyle(fontSize: 9))),
         ],
       ),
     );
@@ -296,12 +314,12 @@ class BukaIsolirPdfService {
           pw.SizedBox(
               width: 140,
               child:
-                  pw.Text(label, style: const pw.TextStyle(fontSize: 8.5))),
-          pw.Text(': ', style: const pw.TextStyle(fontSize: 8.5)),
+                  pw.Text(label, style: const pw.TextStyle(fontSize: 9))),
+          pw.Text(': ', style: const pw.TextStyle(fontSize: 9)),
           pw.Expanded(
               child: pw.Text(
                   value.toString().isEmpty ? '-' : value.toString(),
-                  style: const pw.TextStyle(fontSize: 8.5))),
+                  style: const pw.TextStyle(fontSize: 9))),
         ],
       ),
     );

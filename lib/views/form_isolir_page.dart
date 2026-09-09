@@ -17,12 +17,18 @@ class _FormIsolirPageState extends State<FormIsolirPage> {
   final _nomorIdentitasPelangganController = TextEditingController();
   final _alamatPelangganController = TextEditingController();
   final _nomorLayananController = TextEditingController();
+  final _atasNamaLayananController = TextEditingController(); // Ditambahkan
+  final _alamatLokasiLayananController = TextEditingController(); // Ditambahkan
 
   // Detail Isolir
   final _durasiIsolirController = TextEditingController();
   final _tanggalIsolirController = TextEditingController();
   final _tanggalBukaIsolirController = TextEditingController();
   final _keteranganController = TextEditingController();
+
+  // Penanggung Jawab Telkom & Checkbox TTD
+  final _namaPjTelkomController = TextEditingController(text: 'Yustika Monita');
+  bool _tampilkanTtdTelkom = true;
 
   // Penerima Kuasa (Opsional)
   final _namaKuasaController = TextEditingController();
@@ -34,13 +40,16 @@ class _FormIsolirPageState extends State<FormIsolirPage> {
 
   Future<void> _prosesLanjutkan() async {
     if (_namaPelangganController.text.isEmpty ||
+        _alamatPelangganController.text.isEmpty ||
         _nomorIdentitasPelangganController.text.isEmpty ||
         _nomorLayananController.text.isEmpty ||
+        _atasNamaLayananController.text.isEmpty ||
+        _alamatLokasiLayananController.text.isEmpty ||
         _durasiIsolirController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text(
-                'Lengkapi Data Pelanggan, Nomor Layanan, dan Durasi Isolir!')),
+                'Lengkapi Data Pelanggan, Atas Nama, Alamat Lokasi, dan Durasi Isolir!')),
       );
       return;
     }
@@ -58,6 +67,8 @@ class _FormIsolirPageState extends State<FormIsolirPage> {
         tipeIdentitasPelanggan: _tipeIdentitasPelangganController.text,
         nomorIdentitasPelanggan: _nomorIdentitasPelangganController.text,
         nomorLayanan: _nomorLayananController.text,
+        atasNamaLayanan: _atasNamaLayananController.text,
+        alamatLokasiLayanan: _alamatLokasiLayananController.text,
         durasiIsolir: _durasiIsolirController.text,
         tanggalIsolir: _tanggalIsolirController.text.isEmpty
             ? '-'
@@ -68,9 +79,10 @@ class _FormIsolirPageState extends State<FormIsolirPage> {
         keterangan: _keteranganController.text.isEmpty
             ? '-'
             : _keteranganController.text,
+        namaPjTelkom: _namaPjTelkomController.text,
+        tampilkanTtdTelkom: _tampilkanTtdTelkom,
       );
 
-      // 1. Generate PDF Bytes
       final pdfBytes = await IsolirPdfService.generatePdf(data);
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final fileName =
@@ -78,7 +90,6 @@ class _FormIsolirPageState extends State<FormIsolirPage> {
 
       if (!mounted) return;
 
-      // 2. Navigasi ke PreviewSuratPage
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -101,7 +112,6 @@ class _FormIsolirPageState extends State<FormIsolirPage> {
     }
   }
 
-  // Helper Widget dengan desain Outlined Border
   Widget _buildInputField({
     required String label,
     required TextEditingController controller,
@@ -173,7 +183,7 @@ class _FormIsolirPageState extends State<FormIsolirPage> {
               controller: _namaPelangganController,
             ),
             _buildInputField(
-              label: 'Alamat Pelanggan *',
+              label: 'Alamat Pelanggan (Sesuai KTP) *',
               controller: _alamatPelangganController,
               maxLines: 2,
             ),
@@ -191,6 +201,15 @@ class _FormIsolirPageState extends State<FormIsolirPage> {
               controller: _nomorLayananController,
               keyboardType: TextInputType.number,
             ),
+            _buildInputField(
+              label: 'Atas Nama Layanan (Nama Kantor / Usaha / Sekolah) *',
+              controller: _atasNamaLayananController,
+            ),
+            _buildInputField(
+              label: 'Alamat Lokasi Layanan (Pemasangan) *',
+              controller: _alamatLokasiLayananController,
+              maxLines: 2,
+            ),
 
             const SizedBox(height: 12),
             const Text('DETAIL WAKTU ISOLIR',
@@ -203,11 +222,11 @@ class _FormIsolirPageState extends State<FormIsolirPage> {
               controller: _durasiIsolirController,
             ),
             _buildInputField(
-              label: 'Tanggal Mulai Isolir (Opsional)',
+              label: 'Tanggal Mulai Isolir *',
               controller: _tanggalIsolirController,
             ),
             _buildInputField(
-              label: 'Tanggal Buka Isolir (Opsional)',
+              label: 'Tanggal Buka Isolir *',
               controller: _tanggalBukaIsolirController,
             ),
             _buildInputField(
@@ -215,6 +234,30 @@ class _FormIsolirPageState extends State<FormIsolirPage> {
               controller: _keteranganController,
               maxLines: 2,
             ),
+
+            _buildInputField(
+              label: 'Nama Penanggung Jawab Telkom',
+              controller: _namaPjTelkomController,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: _tampilkanTtdTelkom,
+                  activeColor: const Color(0xFF140F47),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _tampilkanTtdTelkom = value ?? true;
+                    });
+                  },
+                ),
+                const Text(
+                  'Tempelkan Tanda Tangan Telkom',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
 
             ExpansionTile(
               title: const Text(
@@ -234,7 +277,7 @@ class _FormIsolirPageState extends State<FormIsolirPage> {
                   controller: _tipeIdentitasKuasaController,
                 ),
                 _buildInputField(
-                  label: 'Nomor Identitas Pemberi Kuasa',
+                  label: 'Nomor Identitas Kuasa',
                   controller: _nomorIdentitasKuasaController,
                 ),
                 _buildInputField(

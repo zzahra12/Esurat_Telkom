@@ -11,17 +11,23 @@ class FormBnaPage extends StatefulWidget {
 }
 
 class _FormBnaPageState extends State<FormBnaPage> {
-  // Data Pelanggan
+  // Data Pelanggan Utama
   final _namaPelangganController = TextEditingController();
   final _tipeIdentitasPelangganController = TextEditingController(text: 'KTP');
   final _nomorIdentitasPelangganController = TextEditingController();
-  final _alamatPelangganController = TextEditingController();
+  final _alamatPelangganController = TextEditingController(); // Alamat Sesuai KTP
   final _nomorLayananController = TextEditingController();
+  final _atasNamaLayananController = TextEditingController(); // Ditambahkan
+  final _alamatLokasiLayananController = TextEditingController(); // Ditambahkan
 
   // Detail BNA
   final _namaLamaController = TextEditingController();
   final _namaBaruController = TextEditingController();
   final _keteranganController = TextEditingController();
+
+  // Penanggung Jawab Telkom & Checkbox TTD
+  final _namaPjTelkomController = TextEditingController(text: 'Yustika Monita');
+  bool _tampilkanTtdTelkom = true;
 
   // Penerima Kuasa (Opsional)
   final _namaKuasaController = TextEditingController();
@@ -33,11 +39,15 @@ class _FormBnaPageState extends State<FormBnaPage> {
 
   Future<void> _prosesCetakPdf() async {
     if (_namaPelangganController.text.isEmpty ||
+        _alamatPelangganController.text.isEmpty ||
         _nomorIdentitasPelangganController.text.isEmpty ||
+        _nomorLayananController.text.isEmpty ||
+        _atasNamaLayananController.text.isEmpty ||
+        _alamatLokasiLayananController.text.isEmpty ||
         _namaLamaController.text.isEmpty ||
         _namaBaruController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lengkapi Data Pemohon, Nama Lama, dan Nama Baru!')),
+        const SnackBar(content: Text('Lengkapi Semua Data Wajib Balik Nama Layanan!')),
       );
       return;
     }
@@ -55,9 +65,13 @@ class _FormBnaPageState extends State<FormBnaPage> {
         tipeIdentitasPelanggan: _tipeIdentitasPelangganController.text,
         nomorIdentitasPelanggan: _nomorIdentitasPelangganController.text,
         nomorLayanan: _nomorLayananController.text,
+        atasNamaLayanan: _atasNamaLayananController.text,
+        alamatLokasiLayanan: _alamatLokasiLayananController.text,
         namaLama: _namaLamaController.text,
         namaBaru: _namaBaruController.text,
         keterangan: _keteranganController.text.isEmpty ? '-' : _keteranganController.text,
+        namaPjTelkom: _namaPjTelkomController.text,
+        tampilkanTtdTelkom: _tampilkanTtdTelkom,
       );
 
       // 1. Generate PDF Bytes
@@ -158,7 +172,7 @@ class _FormBnaPageState extends State<FormBnaPage> {
               controller: _namaPelangganController,
             ),
             _buildInputField(
-              label: 'Alamat *',
+              label: 'Alamat Pelanggan (Sesuai KTP) *',
               controller: _alamatPelangganController,
               maxLines: 2,
             ),
@@ -172,9 +186,18 @@ class _FormBnaPageState extends State<FormBnaPage> {
               keyboardType: TextInputType.number,
             ),
             _buildInputField(
-              label: 'Nomor Layanan *',
+              label: 'Nomor Layanan Indibiz *',
               controller: _nomorLayananController,
               keyboardType: TextInputType.number,
+            ),
+            _buildInputField(
+              label: 'Atas Nama Layanan (Nama Kantor / Usaha / Sekolah) *',
+              controller: _atasNamaLayananController,
+            ),
+            _buildInputField(
+              label: 'Alamat Lokasi Layanan (Pemasangan) *',
+              controller: _alamatLokasiLayananController,
+              maxLines: 2,
             ),
 
             const SizedBox(height: 12),
@@ -198,6 +221,30 @@ class _FormBnaPageState extends State<FormBnaPage> {
               maxLines: 2,
             ),
 
+            _buildInputField(
+              label: 'Nama Penanggung Jawab Telkom',
+              controller: _namaPjTelkomController,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: _tampilkanTtdTelkom,
+                  activeColor: const Color(0xFF140F47),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _tampilkanTtdTelkom = value ?? true;
+                    });
+                  },
+                ),
+                const Text(
+                  'Tempelkan Tanda Tangan Yustika Monita',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
             ExpansionTile(
               title: const Text(
                 'Isi Data Pemberi Kuasa (Opsional)',
@@ -213,7 +260,7 @@ class _FormBnaPageState extends State<FormBnaPage> {
                   controller: _tipeIdentitasKuasaController,
                 ),
                 _buildInputField(
-                  label: 'Nomor Identitas Pemberi Kuasa',
+                  label: 'Nomor Identitas Kuasa',
                   controller: _nomorIdentitasKuasaController,
                 ),
                 _buildInputField(

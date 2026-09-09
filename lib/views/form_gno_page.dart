@@ -11,19 +11,25 @@ class FormGnoPage extends StatefulWidget {
 }
 
 class _FormGnoPageState extends State<FormGnoPage> {
-  // Data Pelanggan
+  // Data Pelanggan Utama
   final _namaPelangganController = TextEditingController();
   final _tipeIdentitasPelangganController = TextEditingController(text: 'KTP');
   final _nomorIdentitasPelangganController = TextEditingController();
   final _alamatPelangganController = TextEditingController();
   final _nomorLayananController = TextEditingController();
+  final _atasNamaLayananController = TextEditingController();
+  final _alamatLokasiLayananController = TextEditingController();
 
-  // Detail GNO
+  // Detail GNO (Wajib Semua Kecuali Keterangan)
   final _noTelpLamaController = TextEditingController();
   final _noTelpBaruController = TextEditingController();
   final _noInternetLamaController = TextEditingController();
   final _noInternetBaruController = TextEditingController();
   final _keteranganController = TextEditingController();
+
+  // Penanggung Jawab Telkom & Checkbox TTD (Baru Ditambahkan)
+  final _namaPjTelkomController = TextEditingController(text: 'Yustika Monita');
+  bool _tampilkanTtdTelkom = true;
 
   // Penerima Kuasa (Opsional)
   final _namaKuasaController = TextEditingController();
@@ -35,10 +41,17 @@ class _FormGnoPageState extends State<FormGnoPage> {
 
   Future<void> _prosesLanjutkan() async {
     if (_namaPelangganController.text.isEmpty ||
+        _alamatPelangganController.text.isEmpty ||
         _nomorIdentitasPelangganController.text.isEmpty ||
-        _nomorLayananController.text.isEmpty) {
+        _nomorLayananController.text.isEmpty ||
+        _atasNamaLayananController.text.isEmpty ||
+        _alamatLokasiLayananController.text.isEmpty ||
+        _noTelpLamaController.text.isEmpty ||
+        _noTelpBaruController.text.isEmpty ||
+        _noInternetLamaController.text.isEmpty ||
+        _noInternetBaruController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lengkapi Data Utama Pelanggan dan Nomor Layanan!')),
+        const SnackBar(content: Text('Lengkapi Semua Data Wajib Ganti Nomor Layanan!')),
       );
       return;
     }
@@ -56,21 +69,23 @@ class _FormGnoPageState extends State<FormGnoPage> {
         tipeIdentitasPelanggan: _tipeIdentitasPelangganController.text,
         nomorIdentitasPelanggan: _nomorIdentitasPelangganController.text,
         nomorLayanan: _nomorLayananController.text,
-        noTelpLama: _noTelpLamaController.text.isEmpty ? '-' : _noTelpLamaController.text,
-        noTelpBaru: _noTelpBaruController.text.isEmpty ? '-' : _noTelpBaruController.text,
-        noInternetLama: _noInternetLamaController.text.isEmpty ? '-' : _noInternetLamaController.text,
-        noInternetBaru: _noInternetBaruController.text.isEmpty ? '-' : _noInternetBaruController.text,
+        atasNamaLayanan: _atasNamaLayananController.text,
+        alamatLokasiLayanan: _alamatLokasiLayananController.text,
+        noTelpLama: _noTelpLamaController.text,
+        noTelpBaru: _noTelpBaruController.text,
+        noInternetLama: _noInternetLamaController.text,
+        noInternetBaru: _noInternetBaruController.text,
         keterangan: _keteranganController.text.isEmpty ? '-' : _keteranganController.text,
+        namaPjTelkom: _namaPjTelkomController.text,
+        tampilkanTtdTelkom: _tampilkanTtdTelkom,
       );
 
-      // 1. Generate PDF Bytes
       final pdfBytes = await GnoPdfService.generatePdf(data);
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final fileName = 'Surat_GNO_${_namaPelangganController.text.replaceAll(' ', '_')}_$timestamp.pdf';
 
       if (!mounted) return;
 
-      // 2. Navigasi ke PreviewSuratPage
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -93,7 +108,6 @@ class _FormGnoPageState extends State<FormGnoPage> {
     }
   }
 
-  // Helper Widget dengan desain Outlined Border
   Widget _buildInputField({
     required String label,
     required TextEditingController controller,
@@ -161,11 +175,6 @@ class _FormGnoPageState extends State<FormGnoPage> {
               controller: _namaPelangganController,
             ),
             _buildInputField(
-              label: 'Alamat *',
-              controller: _alamatPelangganController,
-              maxLines: 2,
-            ),
-            _buildInputField(
               label: 'Tipe Identitas *',
               controller: _tipeIdentitasPelangganController,
             ),
@@ -175,9 +184,23 @@ class _FormGnoPageState extends State<FormGnoPage> {
               keyboardType: TextInputType.number,
             ),
             _buildInputField(
-              label: 'Nomor Layanan *',
+              label: 'Alamat Pelanggan (Sesuai KTP) *',
+              controller: _alamatPelangganController,
+              maxLines: 2,
+            ),
+            _buildInputField(
+              label: 'Nomor Layanan Indibiz *',
               controller: _nomorLayananController,
               keyboardType: TextInputType.number,
+            ),
+            _buildInputField(
+              label: 'Atas Nama Layanan (Nama Kantor / Usaha / Sekolah) *',
+              controller: _atasNamaLayananController,
+            ),
+            _buildInputField(
+              label: 'Alamat Lokasi Layanan (Pemasangan) *',
+              controller: _alamatLokasiLayananController,
+              maxLines: 2,
             ),
 
             const SizedBox(height: 12),
@@ -188,28 +211,55 @@ class _FormGnoPageState extends State<FormGnoPage> {
             const SizedBox(height: 12),
 
             _buildInputField(
-              label: 'Nomor Telepon Lama (Opsional)',
+              label: 'Nomor Telepon Lama *',
               controller: _noTelpLamaController,
               keyboardType: TextInputType.phone,
             ),
             _buildInputField(
-              label: 'Nomor Telepon Baru (Opsional)',
+              label: 'Nomor Telepon Baru *',
               controller: _noTelpBaruController,
               keyboardType: TextInputType.phone,
             ),
             _buildInputField(
-              label: 'Nomor Internet Lama (Opsional)',
+              label: 'Nomor Internet Lama *',
               controller: _noInternetLamaController,
+              keyboardType: TextInputType.number,
             ),
             _buildInputField(
-              label: 'Nomor Internet Baru (Opsional)',
+              label: 'Nomor Internet Baru *',
               controller: _noInternetBaruController,
+              keyboardType: TextInputType.number,
             ),
             _buildInputField(
               label: 'Keterangan (Opsional)',
               controller: _keteranganController,
               maxLines: 2,
             ),
+
+            // Input Penanggung Jawab Telkom & Checkbox TTD (Baru)
+            _buildInputField(
+              label: 'Nama Penanggung Jawab Telkom',
+              controller: _namaPjTelkomController,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: _tampilkanTtdTelkom,
+                  activeColor: const Color(0xFF140F47),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _tampilkanTtdTelkom = value ?? true;
+                    });
+                  },
+                ),
+                const Text(
+                  'Tempelkan Tanda Tangan Yustika Monita',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
 
             ExpansionTile(
               title: const Text(
@@ -226,7 +276,7 @@ class _FormGnoPageState extends State<FormGnoPage> {
                   controller: _tipeIdentitasKuasaController,
                 ),
                 _buildInputField(
-                  label: 'Nomor Identitas Pemberi Kuasa',
+                  label: 'Nomor Identitas Kuasa',
                   controller: _nomorIdentitasKuasaController,
                 ),
                 _buildInputField(

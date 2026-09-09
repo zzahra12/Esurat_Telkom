@@ -11,38 +11,49 @@ class FormPdaPage extends StatefulWidget {
 }
 
 class _FormPdaPageState extends State<FormPdaPage> {
-  // Data Pelanggan
+  // Controller Data Pelanggan Utama
   final _namaPelangganController = TextEditingController();
   final _tipeIdentitasPelangganController = TextEditingController(text: 'KTP');
   final _nomorIdentitasPelangganController = TextEditingController();
+  final _alamatPelangganController = TextEditingController();
   final _nomorLayananController = TextEditingController();
+  final _atasNamaLayananController = TextEditingController();
+  final _alamatLokasiLayananController = TextEditingController();
 
-  // Detail PDA
+  // Controller Detail Pindah Alamat
   final _alamatLamaController = TextEditingController();
   final _alamatBaruController = TextEditingController();
-  final _noTelpLamaController = TextEditingController();
-  final _noTelpBaruController = TextEditingController();
-  final _noInternetLamaController = TextEditingController();
-  final _noInternetBaruController = TextEditingController();
+  final _nomorTeleponLamaController = TextEditingController();
+  final _nomorTeleponBaruController = TextEditingController();
+  final _nomorInternetLamaController = TextEditingController();
+  final _nomorInternetBaruController = TextEditingController();
   final _keteranganController = TextEditingController();
 
-  // Penerima Kuasa (Opsional)
+  // Controller Penanggung Jawab Telkom & Checkbox TTD
+  final _namaPjTelkomController = TextEditingController(text: 'Yustika Monita');
+  bool _tampilkanTtdTelkom = true;
+
+  // Controller Penerima Kuasa (Opsional)
   final _namaKuasaController = TextEditingController();
-  final _tipeIdentitasKuasaController = TextEditingController();
+  final _tipeIdentitasKuasaController = TextEditingController(text: 'KTP');
   final _nomorIdentitasKuasaController = TextEditingController();
   final _alamatKuasaController = TextEditingController();
 
   bool _isLoading = false;
 
-  Future<void> _prosesLanjutkan() async {
+  Future<void> _prosesCetakPdf() async {
     if (_namaPelangganController.text.isEmpty ||
         _nomorIdentitasPelangganController.text.isEmpty ||
+        _nomorLayananController.text.isEmpty ||
+        _atasNamaLayananController.text.isEmpty ||
+        _alamatLokasiLayananController.text.isEmpty ||
         _alamatLamaController.text.isEmpty ||
-        _alamatBaruController.text.isEmpty) {
+        _alamatBaruController.text.isEmpty ||
+        _nomorTeleponLamaController.text.isEmpty ||
+        _nomorInternetLamaController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text(
-                'Lengkapi Data Pelanggan, Alamat Lama, dan Alamat Baru!')),
+            content: Text('Lengkapi Semua Data Pelanggan dan Alamat Wajib!')),
       );
       return;
     }
@@ -51,35 +62,28 @@ class _FormPdaPageState extends State<FormPdaPage> {
 
     try {
       final data = PdaModel(
-        namaKuasa: _namaKuasaController.text,
-        alamatKuasa: _alamatKuasaController.text,
-        tipeIdentitasKuasa: _tipeIdentitasKuasaController.text,
-        nomorIdentitasKuasa: _nomorIdentitasKuasaController.text,
         namaPelanggan: _namaPelangganController.text,
-        alamatPelanggan: _alamatLamaController.text,
+        alamatPelanggan: _alamatLokasiLayananController.text, // Menggunakan alamat lokasi pemasangan
         tipeIdentitasPelanggan: _tipeIdentitasPelangganController.text,
         nomorIdentitasPelanggan: _nomorIdentitasPelangganController.text,
         nomorLayanan: _nomorLayananController.text,
+        atasNamaLayanan: _atasNamaLayananController.text,
+        alamatLokasiLayanan: _alamatLokasiLayananController.text,
         alamatLama: _alamatLamaController.text,
         alamatBaru: _alamatBaruController.text,
-        noTelpLama: _noTelpLamaController.text.isEmpty
-            ? '-'
-            : _noTelpLamaController.text,
-        noTelpBaru: _noTelpBaruController.text.isEmpty
-            ? '-'
-            : _noTelpBaruController.text,
-        noInternetLama: _noInternetLamaController.text.isEmpty
-            ? '-'
-            : _noInternetLamaController.text,
-        noInternetBaru: _noInternetBaruController.text.isEmpty
-            ? '-'
-            : _noInternetBaruController.text,
-        keterangan: _keteranganController.text.isEmpty
-            ? '-'
-            : _keteranganController.text,
+        nomorTeleponLama: _nomorTeleponLamaController.text,
+        nomorTeleponBaru: _nomorTeleponBaruController.text.isEmpty ? '-' : _nomorTeleponBaruController.text,
+        nomorInternetLama: _nomorInternetLamaController.text,
+        nomorInternetBaru: _nomorInternetBaruController.text.isEmpty ? '-' : _nomorInternetBaruController.text,
+        keterangan: _keteranganController.text.isEmpty ? '-' : _keteranganController.text,
+        namaPjTelkom: _namaPjTelkomController.text,
+        tampilkanTtdTelkom: _tampilkanTtdTelkom,
+        namaKuasa: _namaKuasaController.text,
+        tipeIdentitasKuasa: _tipeIdentitasKuasaController.text,
+        nomorIdentitasKuasa: _nomorIdentitasKuasaController.text,
+        alamatKuasa: _alamatKuasaController.text,
       );
 
-      // 1. Generate PDF Bytes
       final pdfBytes = await PdaPdfService.generatePdf(data);
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final fileName =
@@ -87,12 +91,11 @@ class _FormPdaPageState extends State<FormPdaPage> {
 
       if (!mounted) return;
 
-      // 2. Navigasi ke Halaman Preview Surat
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => PreviewSuratPage(
-            jenisSurat: 'Surat Permintaan Pindah Alamat (PDA)',
+            jenisSurat: 'Surat Permintaan Pindah Alamat Layanan',
             pdfBytes: pdfBytes,
             fileName: fileName,
             onCetakPdf: (bytes, name) async {
@@ -109,8 +112,6 @@ class _FormPdaPageState extends State<FormPdaPage> {
       if (mounted) setState(() => _isLoading = false);
     }
   }
-
-  // Helper Widget dengan desain Outlined Border
   Widget _buildInputField({
     required String label,
     required TextEditingController controller,
@@ -169,14 +170,21 @@ class _FormPdaPageState extends State<FormPdaPage> {
             const Center(
               child: Text(
                 'Data Surat PDA (Pindah Alamat)',
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
             const SizedBox(height: 24),
-
+            const Text(
+              '--- DATA PELANGGAN ---',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Color(0xFF140F47)),
+            ),
+            const SizedBox(height: 12),
             _buildInputField(
               label: 'Nama Lengkap Pelanggan *',
               controller: _namaPelangganController,
@@ -191,17 +199,31 @@ class _FormPdaPageState extends State<FormPdaPage> {
               keyboardType: TextInputType.number,
             ),
             _buildInputField(
-              label: 'Nomor Layanan *',
+              label: 'Alamat Pelanggan (Sesuai KTP) *',
+              controller: _alamatPelangganController,
+              maxLines: 2,
+            ),
+            _buildInputField(
+              label: 'Nomor Layanan Indibiz *',
               controller: _nomorLayananController,
               keyboardType: TextInputType.number,
             ),
-
+            _buildInputField(
+              label: 'Atas Nama Layanan (Nama Kantor / Usaha / Sekolah) *',
+              controller: _atasNamaLayananController,
+            ),
+            _buildInputField(
+              label: 'Alamat Lokasi Layanan (Pemasangan) *',
+              controller: _alamatLokasiLayananController,
+              maxLines: 2,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              '--- DETAIL PINDAH ALAMAT ---',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Color(0xFF140F47)),
+            ),
             const SizedBox(height: 12),
-            const Text('DETAIL PINDAH ALAMAT',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Color(0xFF140F47))),
-            const SizedBox(height: 12),
-
             _buildInputField(
               label: 'Alamat Lama *',
               controller: _alamatLamaController,
@@ -213,29 +235,53 @@ class _FormPdaPageState extends State<FormPdaPage> {
               maxLines: 2,
             ),
             _buildInputField(
-              label: 'Nomor Telepon Lama (Opsional)',
-              controller: _noTelpLamaController,
+              label: 'Nomor Telepon Lama *',
+              controller: _nomorTeleponLamaController,
               keyboardType: TextInputType.phone,
             ),
             _buildInputField(
               label: 'Nomor Telepon Baru (Opsional)',
-              controller: _noTelpBaruController,
+              controller: _nomorTeleponBaruController,
               keyboardType: TextInputType.phone,
             ),
             _buildInputField(
-              label: 'Nomor Internet Lama (Opsional)',
-              controller: _noInternetLamaController,
+              label: 'Nomor Internet Lama *',
+              controller: _nomorInternetLamaController,
+              keyboardType: TextInputType.number,
             ),
             _buildInputField(
               label: 'Nomor Internet Baru (Opsional)',
-              controller: _noInternetBaruController,
+              controller: _nomorInternetBaruController,
+              keyboardType: TextInputType.number,
             ),
             _buildInputField(
               label: 'Keterangan (Opsional)',
               controller: _keteranganController,
               maxLines: 2,
             ),
-
+            _buildInputField(
+              label: 'Nama Penanggung Jawab Telkom',
+              controller: _namaPjTelkomController,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: _tampilkanTtdTelkom,
+                  activeColor: const Color(0xFF140F47),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _tampilkanTtdTelkom = value ?? true;
+                    });
+                  },
+                ),
+                const Text(
+                  'Tempelkan Tanda Tangan Yustika Monita',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
             ExpansionTile(
               title: const Text(
                 'Isi Data Pemberi Kuasa (Opsional)',
@@ -254,7 +300,7 @@ class _FormPdaPageState extends State<FormPdaPage> {
                   controller: _tipeIdentitasKuasaController,
                 ),
                 _buildInputField(
-                  label: 'Nomor Identitas Pemberi Kuasa',
+                  label: 'Nomor Identitas Kuasa',
                   controller: _nomorIdentitasKuasaController,
                 ),
                 _buildInputField(
@@ -264,7 +310,6 @@ class _FormPdaPageState extends State<FormPdaPage> {
                 ),
               ],
             ),
-
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -273,17 +318,19 @@ class _FormPdaPageState extends State<FormPdaPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF140F47),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                onPressed: _isLoading ? null : _prosesLanjutkan,
+                onPressed: _isLoading ? null : _prosesCetakPdf,
                 child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
                     : const Text(
                         'Lanjutkan',
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
               ),
             ),
