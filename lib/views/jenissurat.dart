@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-// 1. Import kedua file form yang sudah kita buat
+// Import semua file form surat yang tersedia
 import 'form_buka_isolir_page.dart'; 
-import 'form_pda_page.dart';    
-import 'form_gno_page.dart';    
+import 'form_pda_page.dart';     
+import 'form_gno_page.dart';     
 import 'form_bna_page.dart'; 
 import 'form_do_page.dart';
 import 'form_isolir_page.dart';
 import 'form_upgrade_downgrade_page.dart';
+import 'form_wms_page.dart'; // 👈 Import Form WMS yang baru dibuat
 
 class PilihJenisSuratScreen extends StatelessWidget {
   const PilihJenisSuratScreen({super.key});
@@ -19,52 +20,57 @@ class PilihJenisSuratScreen extends StatelessWidget {
     'Surat Permintaan DO',
     'Surat Permintaan Isolir',
     'Surat Upgrade-Downgrade',
+    'Surat Pernyataan WMS', // 👈 Tambahkan ke dalam list
   ];
 
-  // 2. Perbarui fungsi navigasi _pilihSurat
   void _pilihSurat(BuildContext context, String jenisSurat) {
-  if (jenisSurat == 'Surat Permintaan Buka Isolir') {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const FormBukaIsolirPage()),
-    );
-  } else if (jenisSurat == 'Surat PDA') {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const FormPdaPage()),
-    );
-  } else if (jenisSurat == 'Surat GNO') {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const FormGnoPage()),
-    );
-  } else if (jenisSurat == 'Surat BNA') {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const FormBnaPage()),
-    );
-  } else if (jenisSurat == 'Surat Permintaan DO') {
-    // 👈 Tambahkan kondisi ini
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const FormDoPage()),
-    );
-  } else if (jenisSurat == 'Surat Permintaan Isolir') {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const FormIsolirPage()),
-    );
-  } else if (jenisSurat == 'Surat Upgrade-Downgrade') {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const FormUpgradeDowngradePage()),
-    );
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Form untuk $jenisSurat belum tersedia')),
-    );
+    if (jenisSurat == 'Surat Permintaan Buka Isolir') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FormBukaIsolirPage()),
+      );
+    } else if (jenisSurat == 'Surat PDA') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FormPdaPage()),
+      );
+    } else if (jenisSurat == 'Surat GNO') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FormGnoPage()),
+      );
+    } else if (jenisSurat == 'Surat BNA') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FormBnaPage()),
+      );
+    } else if (jenisSurat == 'Surat Permintaan DO') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FormDoPage()),
+      );
+    } else if (jenisSurat == 'Surat Permintaan Isolir') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FormIsolirPage()),
+      );
+    } else if (jenisSurat == 'Surat Upgrade-Downgrade') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FormUpgradeDowngradePage()),
+      );
+    } else if (jenisSurat == 'Surat Pernyataan WMS') {
+      // 👈 Navigasi ke Form WMS
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FormWmsPage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Form untuk $jenisSurat belum tersedia')),
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
