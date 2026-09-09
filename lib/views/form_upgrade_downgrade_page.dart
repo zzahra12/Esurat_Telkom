@@ -12,12 +12,14 @@ class FormUpgradeDowngradePage extends StatefulWidget {
 }
 
 class _FormUpgradeDowngradePageState extends State<FormUpgradeDowngradePage> {
-  // Data Pelanggan
+  // Data Pelanggan Utama
   final _namaPelangganController = TextEditingController();
   final _tipeIdentitasPelangganController = TextEditingController(text: 'KTP');
   final _nomorIdentitasPelangganController = TextEditingController();
   final _alamatPelangganController = TextEditingController();
   final _nomorLayananController = TextEditingController();
+  final _atasNamaLayananController = TextEditingController(); // Ditambahkan
+  final _alamatLokasiLayananController = TextEditingController(); // Ditambahkan
 
   // Detail Upgrade / Downgrade
   String _tipeModifikasi = 'UPGRADE'; // Default UPGRADE
@@ -25,6 +27,10 @@ class _FormUpgradeDowngradePageState extends State<FormUpgradeDowngradePage> {
   final _keteranganController = TextEditingController();
   final _tagihanController = TextEditingController();
   final _keteranganTambahanController = TextEditingController();
+
+  // Penanggung Jawab Telkom & Checkbox TTD
+  final _namaPjTelkomController = TextEditingController(text: 'Yustika Monita');
+  bool _tampilkanTtdTelkom = true;
 
   // Penerima Kuasa (Opsional)
   final _namaKuasaController = TextEditingController();
@@ -36,13 +42,16 @@ class _FormUpgradeDowngradePageState extends State<FormUpgradeDowngradePage> {
 
   Future<void> _prosesLanjutkan() async {
     if (_namaPelangganController.text.isEmpty ||
+        _alamatPelangganController.text.isEmpty ||
         _nomorIdentitasPelangganController.text.isEmpty ||
         _nomorLayananController.text.isEmpty ||
+        _atasNamaLayananController.text.isEmpty ||
+        _alamatLokasiLayananController.text.isEmpty ||
         _namaTransaksiController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text(
-                'Lengkapi Data Pelanggan, Nomor Layanan, dan Nama Transaksi!')),
+                'Lengkapi Data Pelanggan, Atas Nama, Alamat Lokasi, dan Nama Transaksi!')),
       );
       return;
     }
@@ -60,6 +69,8 @@ class _FormUpgradeDowngradePageState extends State<FormUpgradeDowngradePage> {
         tipeIdentitasPelanggan: _tipeIdentitasPelangganController.text,
         nomorIdentitasPelanggan: _nomorIdentitasPelangganController.text,
         nomorLayanan: _nomorLayananController.text,
+        atasNamaLayanan: _atasNamaLayananController.text,
+        alamatLokasiLayanan: _alamatLokasiLayananController.text,
         tipeModifikasi: _tipeModifikasi,
         namaTransaksi: _namaTransaksiController.text,
         keterangan: _keteranganController.text.isEmpty
@@ -71,6 +82,8 @@ class _FormUpgradeDowngradePageState extends State<FormUpgradeDowngradePage> {
         keteranganTambahanDetail: _keteranganTambahanController.text.isEmpty
             ? '-'
             : _keteranganTambahanController.text,
+        namaPjTelkom: _namaPjTelkomController.text,
+        tampilkanTtdTelkom: _tampilkanTtdTelkom,
       );
 
       // 1. Generate PDF Bytes
@@ -176,7 +189,7 @@ class _FormUpgradeDowngradePageState extends State<FormUpgradeDowngradePage> {
               controller: _namaPelangganController,
             ),
             _buildInputField(
-              label: 'Alamat Pelanggan *',
+              label: 'Alamat Pelanggan (Sesuai KTP) *',
               controller: _alamatPelangganController,
               maxLines: 2,
             ),
@@ -194,6 +207,15 @@ class _FormUpgradeDowngradePageState extends State<FormUpgradeDowngradePage> {
               controller: _nomorLayananController,
               keyboardType: TextInputType.number,
             ),
+            _buildInputField(
+              label: 'Atas Nama Layanan (Nama Kantor / Usaha / Sekolah) *',
+              controller: _atasNamaLayananController,
+            ),
+            _buildInputField(
+              label: 'Alamat Lokasi Layanan (Pemasangan) *',
+              controller: _alamatLokasiLayananController,
+              maxLines: 2,
+            ),
 
             const SizedBox(height: 12),
             const Text('DETAIL MODIFIKASI LAYANAN',
@@ -202,64 +224,92 @@ class _FormUpgradeDowngradePageState extends State<FormUpgradeDowngradePage> {
             const SizedBox(height: 12),
 
             // Radio Pilihan UPGRADE / DOWNGRADE
-            // Radio Pilihan UPGRADE / DOWNGRADE
-const Text(
-  'Tipe Permohonan',
-  style: TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.bold,
-    color: Colors.black,
-  ),
-),
-Row(
-  children: [
-    Expanded(
-      child: RadioListTile<String>(
-        contentPadding: EdgeInsets.zero, // Menghilangkan padding bawaan
-        visualDensity: const VisualDensity(horizontal: -4, vertical: -4), // Merapatkan radio button dengan teks
-        title: const Text(
-          'UPGRADE',
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600), // Ukuran font dikecilkan
-        ),
-        value: 'UPGRADE',
-        groupValue: _tipeModifikasi,
-        onChanged: (val) => setState(() => _tipeModifikasi = val!),
-      ),
-    ),
-    Expanded(
-      child: RadioListTile<String>(
-        contentPadding: EdgeInsets.zero, // Menghilangkan padding bawaan
-        visualDensity: const VisualDensity(horizontal: -4, vertical: -4), // Merapatkan radio button dengan teks
-        title: const Text(
-          'DOWNGRADE',
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600), // Ukuran font dikecilkan
-        ),
-        value: 'DOWNGRADE',
-        groupValue: _tipeModifikasi,
-        onChanged: (val) => setState(() => _tipeModifikasi = val!),
-      ),
-    ),
-  ],
-),
-const SizedBox(height: 12),
+            const Text(
+              'Tipe Permohonan',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: RadioListTile<String>(
+                    contentPadding: EdgeInsets.zero,
+                    visualDensity:
+                        const VisualDensity(horizontal: -4, vertical: -4),
+                    title: const Text(
+                      'UPGRADE',
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                    value: 'UPGRADE',
+                    groupValue: _tipeModifikasi,
+                    onChanged: (val) => setState(() => _tipeModifikasi = val!),
+                  ),
+                ),
+                Expanded(
+                  child: RadioListTile<String>(
+                    contentPadding: EdgeInsets.zero,
+                    visualDensity:
+                        const VisualDensity(horizontal: -4, vertical: -4),
+                    title: const Text(
+                      'DOWNGRADE',
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                    value: 'DOWNGRADE',
+                    groupValue: _tipeModifikasi,
+                    onChanged: (val) => setState(() => _tipeModifikasi = val!),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
 
             _buildInputField(
               label: 'Nama Transaksi *',
               controller: _namaTransaksiController,
             ),
             _buildInputField(
-              label: 'Keterangan (Opsional)',
+              label: 'Keterangan *',
               controller: _keteranganController,
               maxLines: 2,
             ),
             _buildInputField(
-              label: 'Informasi Tagihan (Opsional)',
+              label: 'Informasi Tagihan *',
               controller: _tagihanController,
             ),
             _buildInputField(
-              label: 'Catatan Tambahan (Opsional)',
+              label: 'Keterangan Tambahan *',
               controller: _keteranganTambahanController,
+              maxLines: 2,
             ),
+
+            _buildInputField(
+              label: 'Nama Penanggung Jawab Telkom',
+              controller: _namaPjTelkomController,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: _tampilkanTtdTelkom,
+                  activeColor: const Color(0xFF140F47),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _tampilkanTtdTelkom = value ?? true;
+                    });
+                  },
+                ),
+                const Text(
+                  'Tempelkan Tanda Tangan Telkom',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
 
             ExpansionTile(
               title: const Text('Isi Data Pemberi Kuasa (Opsional)',
@@ -277,7 +327,7 @@ const SizedBox(height: 12),
                   controller: _tipeIdentitasKuasaController,
                 ),
                 _buildInputField(
-                  label: 'Nomor Identitas Pemberi Kuasa',
+                  label: 'Nomor Identitas Kuasa',
                   controller: _nomorIdentitasKuasaController,
                 ),
                 _buildInputField(
