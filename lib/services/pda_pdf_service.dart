@@ -51,10 +51,13 @@ class PdaPdfService {
     String internetBaru = (data.nomorInternetBaru.trim().isEmpty) ? '-' : data.nomorInternetBaru;
     String ket = (data.keterangan.trim().isEmpty) ? '-' : data.keterangan;
 
+    // Margin 1.27 cm (36 poin untuk semua sisi)
+    const double margin1_27cm = 36.0;
+
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.symmetric(horizontal: 40, vertical: 32),
+        margin: const pw.EdgeInsets.all(margin1_27cm),
         build: (pw.Context context) {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -64,18 +67,18 @@ class PdaPdfService {
                 child: pw.Text(
                   'SURAT PERMINTAAN PINDAH ALAMAT LAYANAN',
                   style: pw.TextStyle(
-                    fontSize: 12,
+                    fontSize: 13,
                     fontWeight: pw.FontWeight.bold,
                     decoration: pw.TextDecoration.underline,
                   ),
                 ),
               ),
-              pw.SizedBox(height: 18),
+              pw.SizedBox(height: 10),
 
               // 2. BAGIAN ATAS: DATA PELANGGAN
               pw.Text('Yang bertanda tangan di bawah ini :',
-                  style: const pw.TextStyle(fontSize: 9)),
-              pw.SizedBox(height: 4),
+                  style: const pw.TextStyle(fontSize: 11)),
+              pw.SizedBox(height: 2),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
                 child: pw.Column(
@@ -87,11 +90,11 @@ class PdaPdfService {
                   ],
                 ),
               ),
-              pw.SizedBox(height: 6),
+              pw.SizedBox(height: 2),
               pw.Text(
                 '(*diisi bila mutasi dilakukan oleh pihak penerima kuasa dari PELANGGAN)',
                 style: pw.TextStyle(
-                  fontSize: 8,
+                  fontSize: 9.5,
                   fontStyle: pw.FontStyle.italic,
                   fontWeight: pw.FontWeight.bold,
                 ),
@@ -100,8 +103,8 @@ class PdaPdfService {
 
               // 3. BAGIAN TENGAH: DATA PENERIMA KUASA
               pw.Text('Bertindak untuk dan atas nama :',
-                  style: const pw.TextStyle(fontSize: 9)),
-              pw.SizedBox(height: 4),
+                  style: const pw.TextStyle(fontSize: 11)),
+              pw.SizedBox(height: 2),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
                 child: pw.Column(
@@ -113,14 +116,14 @@ class PdaPdfService {
                   ],
                 ),
               ),
-              pw.SizedBox(height: 10),
+              pw.SizedBox(height: 6),
 
               // 4. DETAIL LAYANAN
               pw.Text(
                 'Selanjutnya disebut sebagai "PELANGGAN", selaku pihak yang berlangganan layanan Indibiz sebagai berikut:',
-                style: const pw.TextStyle(fontSize: 8.5),
+                style: const pw.TextStyle(fontSize: 11),
               ),
-              pw.SizedBox(height: 6),
+              pw.SizedBox(height: 2),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
                 child: pw.Column(
@@ -131,33 +134,33 @@ class PdaPdfService {
                   ],
                 ),
               ),
-              pw.SizedBox(height: 12),
+              pw.SizedBox(height: 6),
 
               // 5. MENYATAKAN
               pw.Center(
                 child: pw.Text(
                   'MENYATAKAN',
                   style: pw.TextStyle(
-                      fontSize: 10, fontWeight: pw.FontWeight.bold),
+                      fontSize: 11.5, fontWeight: pw.FontWeight.bold),
                 ),
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Text(
                 'BAHWA, PELANGGAN adalah benar pihak yang berlangganan Layanan Indibiz berdasarkan Kontrak Berlangganan, dan dengan ini mengajukan permintaan Pindah Alamat Layanan Indibiz, sebagai berikut:',
-                style: const pw.TextStyle(fontSize: 8.5),
+                style: const pw.TextStyle(fontSize: 11),
                 textAlign: pw.TextAlign.justify,
               ),
-              pw.SizedBox(height: 10),
+              pw.SizedBox(height: 6),
 
               // 6. DETAIL PINDAH ALAMAT
               pw.Text(
                 'Jenis Permohonan : Pindah Alamat',
-                style:
-                    pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+                style: pw.TextStyle(
+                    fontSize: 11, fontWeight: pw.FontWeight.bold),
               ),
-              pw.SizedBox(height: 4),
+              pw.SizedBox(height: 2),
               pw.Padding(
-                padding: const pw.EdgeInsets.only(left: 15),
+                padding: const pw.EdgeInsets.only(left: 10),
                 child: pw.Column(
                   children: [
                     _buildSubRow('a. Alamat Lama', data.alamatLama),
@@ -170,20 +173,20 @@ class PdaPdfService {
                   ],
                 ),
               ),
-              pw.SizedBox(height: 10),
+              pw.SizedBox(height: 6),
 
               // 7. KETERANGAN TAMBAHAN
               pw.Text('Keterangan Tambahan :',
-                  style: const pw.TextStyle(fontSize: 8.5)),
+                  style: const pw.TextStyle(fontSize: 11)),
               pw.SizedBox(height: 2),
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 8)),
+                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 11)),
                   pw.Expanded(
                     child: pw.Text(
                       'Permohonan ini berlaku sejak ditandatanganinya Surat Permintaan Pindah Alamat Layanan Indibiz ini.',
-                      style: const pw.TextStyle(fontSize: 8),
+                      style: const pw.TextStyle(fontSize: 11),
                     ),
                   ),
                 ],
@@ -191,18 +194,18 @@ class PdaPdfService {
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 8)),
+                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 11)),
                   pw.Expanded(
                     child: pw.Text(
                       'Surat Permintaan Pindah Alamat Layanan Indibiz ini merupakan satu kesatuan yang tidak terpisahkan dengan Kontrak Berlangganan yang telah ditandatanganinya PT Telkom Indonesia (Persero) Tbk dengan PELANGGAN.',
-                      style: const pw.TextStyle(fontSize: 8),
+                      style: const pw.TextStyle(fontSize: 11),
                     ),
                   ),
                 ],
               ),
-              pw.SizedBox(height: 24),
+              pw.SizedBox(height: 14),
 
-              // 8. DUA KOLOM TANDA TANGAN (SEJAJAR PRESISI)
+              // 8. DUA KOLOM TANDA TANGAN (SEJAJAR SEMPURNA & KOTAK MATERAI BESAR)
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -212,25 +215,29 @@ class PdaPdfService {
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
                       children: [
-                        pw.SizedBox(height: 12),
+                        pw.SizedBox(height: 15), // Sejajar dengan baris tanggal di sebelah kanan
                         pw.Text(
                           'Penanggung Jawab Telkom',
                           style: pw.TextStyle(
-                              fontSize: 9, fontWeight: pw.FontWeight.bold),
+                              fontSize: 11, fontWeight: pw.FontWeight.bold),
+                        ),
+                        pw.SizedBox(height: 6),
+                        pw.SizedBox(
+                          height: 70, // Tinggi disesuaikan dengan area materai di kanan
+                          child: pw.Center(
+                            child: (data.tampilkanTtdTelkom == true && ttdImage != null)
+                                ? pw.Image(
+                                    ttdImage,
+                                    height: 56,
+                                    fit: pw.BoxFit.contain,
+                                  )
+                                : pw.SizedBox(),
+                          ),
                         ),
                         pw.SizedBox(height: 4),
-                        if (data.tampilkanTtdTelkom == true && ttdImage != null)
-                          pw.Image(
-                            ttdImage,
-                            height: 38,
-                            fit: pw.BoxFit.contain,
-                          )
-                        else
-                          pw.SizedBox(height: 38),
-                        pw.SizedBox(height: 6), // Jarak sebelum nama
                         pw.Text(
                           '(${data.namaPjTelkom ?? 'Yustika Monita'})',
-                          style: const pw.TextStyle(fontSize: 8),
+                          style: const pw.TextStyle(fontSize: 11),
                         ),
                       ],
                     ),
@@ -243,52 +250,52 @@ class PdaPdfService {
                       children: [
                         pw.Text(
                           tanggalRealtime,
-                          style: const pw.TextStyle(fontSize: 8),
+                          style: const pw.TextStyle(fontSize: 11),
                         ),
                         pw.SizedBox(height: 4),
                         pw.Text(
                           'Pelanggan',
                           style: pw.TextStyle(
-                              fontSize: 9, fontWeight: pw.FontWeight.bold),
+                              fontSize: 11, fontWeight: pw.FontWeight.bold),
                         ),
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.only(right: 15.0),
-                          child: pw.SizedBox(
-                            height: 40,
-                            child: pw.Column(
-                              mainAxisAlignment: pw.MainAxisAlignment.center,
-                              children: [
-                                pw.Container(
-                                  padding: const pw.EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 2),
-                                  decoration: pw.BoxDecoration(
-                                    border: pw.Border.all(
-                                        color: PdfColors.grey700, width: 0.8),
-                                  ),
-                                  child: pw.Column(
-                                    mainAxisSize: pw.MainAxisSize.min,
-                                    children: [
-                                      pw.Text(
-                                        'Materai',
-                                        style: const pw.TextStyle(
-                                            fontSize: 7, color: PdfColors.black),
-                                      ),
-                                      pw.Text(
-                                        '10.000',
-                                        style: const pw.TextStyle(
-                                            fontSize: 7, color: PdfColors.black),
-                                      ),
-                                    ],
-                                  ),
+                        pw.SizedBox(height: 6),
+                        // Kotak Materai Diperbesar (Lebar 65, Tinggi 56) pas untuk materai fisik
+                        pw.SizedBox(
+                          height: 70,
+                          child: pw.Center(
+                            child: pw.Container(
+                              width: 65,
+                              height: 56,
+                              alignment: pw.Alignment.center,
+                              decoration: pw.BoxDecoration(
+                                border: pw.Border.all(
+                                  color: PdfColors.black,
+                                  width: 0.8,
+                                  style: pw.BorderStyle.dashed,
                                 ),
-                              ],
+                              ),
+                              child: pw.Column(
+                                mainAxisAlignment: pw.MainAxisAlignment.center,
+                                children: [
+                                  pw.Text(
+                                    'Materai',
+                                    style: const pw.TextStyle(
+                                        fontSize: 8, color: PdfColors.black),
+                                  ),
+                                  pw.Text(
+                                    '10.000',
+                                    style: const pw.TextStyle(
+                                        fontSize: 8, color: PdfColors.black),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                        pw.SizedBox(height: 6), // Jarak sebelum nama (disamakan dengan kiri)
+                        pw.SizedBox(height: 4),
                         pw.Text(
                           '($atasNama)',
-                          style: const pw.TextStyle(fontSize: 8),
+                          style: const pw.TextStyle(fontSize: 11),
                         ),
                       ],
                     ),
@@ -306,17 +313,17 @@ class PdaPdfService {
 
   static pw.Widget _buildDataRow(String label, String value) {
     return pw.Padding(
-      padding: const pw.EdgeInsets.symmetric(vertical: 1.5),
+      padding: const pw.EdgeInsets.symmetric(vertical: 1),
       child: pw.Row(
         children: [
           pw.SizedBox(
-              width: 110,
+              width: 130,
               child:
-                  pw.Text(label, style: const pw.TextStyle(fontSize: 8.5))),
-          pw.Text(': ', style: const pw.TextStyle(fontSize: 8.5)),
+                  pw.Text(label, style: const pw.TextStyle(fontSize: 11))),
+          pw.Text(': ', style: const pw.TextStyle(fontSize: 11)),
           pw.Expanded(
               child: pw.Text(value.toString().isEmpty ? '' : value.toString(),
-                  style: const pw.TextStyle(fontSize: 8.5))),
+                  style: const pw.TextStyle(fontSize: 11))),
         ],
       ),
     );
@@ -324,17 +331,17 @@ class PdaPdfService {
 
   static pw.Widget _buildRow(String label, String value) {
     return pw.Padding(
-      padding: const pw.EdgeInsets.symmetric(vertical: 1.5),
+      padding: const pw.EdgeInsets.symmetric(vertical: 1),
       child: pw.Row(
         children: [
           pw.SizedBox(
-              width: 110,
+              width: 130,
               child:
-                  pw.Text(label, style: const pw.TextStyle(fontSize: 8.5))),
-          pw.Text(': ', style: const pw.TextStyle(fontSize: 8.5)),
+                  pw.Text(label, style: const pw.TextStyle(fontSize: 11))),
+          pw.Text(': ', style: const pw.TextStyle(fontSize: 11)),
           pw.Expanded(
               child: pw.Text(value.toString().isEmpty ? '-' : value.toString(),
-                  style: const pw.TextStyle(fontSize: 8.5))),
+                  style: const pw.TextStyle(fontSize: 11))),
         ],
       ),
     );
@@ -346,13 +353,13 @@ class PdaPdfService {
       child: pw.Row(
         children: [
           pw.SizedBox(
-              width: 140,
+              width: 150,
               child:
-                  pw.Text(label, style: const pw.TextStyle(fontSize: 8.5))),
-          pw.Text(': ', style: const pw.TextStyle(fontSize: 8.5)),
+                  pw.Text(label, style: const pw.TextStyle(fontSize: 11))),
+          pw.Text(': ', style: const pw.TextStyle(fontSize: 11)),
           pw.Expanded(
               child: pw.Text(value.toString().isEmpty ? '-' : value.toString(),
-                  style: const pw.TextStyle(fontSize: 8.5))),
+                  style: const pw.TextStyle(fontSize: 11))),
         ],
       ),
     );

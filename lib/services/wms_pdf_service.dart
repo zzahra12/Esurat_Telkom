@@ -12,12 +12,45 @@ class WmsPdfService {
   static Future<Uint8List> generatePdf(WmsModel data) async {
     final pdf = pw.Document();
 
-    String nomorSuratFinal = data.nomorSuratManual.replaceAll('{NAMA TELDA}', data.namaTelda.toUpperCase());
+    // 🔄 Logika Penggabungan Nomor Surat, Nama Telda, dan Tahun Otomatis
+    String nomorSuratFinal = data.nomorSuratManual.trim();
+    final teldaVal = data.namaTelda.trim().toUpperCase();
+    final String tahunSekarang = DateTime.now().year.toString();
+
+    // 1. Ganti berbagai variasi placeholder nama telda jika ada di input manual
+    nomorSuratFinal = nomorSuratFinal
+        .replaceAll('{NAMA TELDA}', teldaVal)
+        .replaceAll('{nama_telda}', teldaVal)
+        .replaceAll('{nama telda}', teldaVal)
+        .replaceAll('{namaTelda}', teldaVal)
+        .replaceAll('{TELDA}', teldaVal)
+        .replaceAll('{telda}', teldaVal);
+
+    // 2. Pastikan Nama Telda ada di dalam string nomor surat
+    if (teldaVal.isNotEmpty && !nomorSuratFinal.contains(teldaVal)) {
+      nomorSuratFinal = '$nomorSuratFinal/$teldaVal';
+    }
+
+    // 3. Pastikan Tahun ada di bagian akhir nomor surat secara otomatis
+    if (!nomorSuratFinal.contains(tahunSekarang)) {
+      nomorSuratFinal = nomorSuratFinal
+          .replaceAll('{TAHUN}', tahunSekarang)
+          .replaceAll('{tahun}', tahunSekarang)
+          .replaceAll('{YEAR}', tahunSekarang)
+          .replaceAll('{year}', tahunSekarang);
+
+      if (!nomorSuratFinal.contains(tahunSekarang)) {
+        nomorSuratFinal = '$nomorSuratFinal/$tahunSekarang';
+      }
+    }
+
+    // Margin 1.27 cm (36 poin untuk semua sisi) agar konsisten dengan layanan lain
+    const double margin1_27cm = 36.0;
 
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.symmetric(horizontal: 40, vertical: 32),
+        margin: const pw.EdgeInsets.all(margin1_27cm),
         build: (pw.Context context) {
           return [
             // Header / Judul
@@ -26,24 +59,33 @@ class WmsPdfService {
                 children: [
                   pw.Text(
                     'SURAT PERNYATAAN BERLANGGANAN',
-                    style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+                    style: pw.TextStyle(
+                      fontSize: 13,
+                      fontWeight: pw.FontWeight.bold,
+                      decoration: pw.TextDecoration.underline,
+                    ),
                   ),
                   pw.Text(
                     'WIFI MANAGED SERVICE (WMS)',
-                    style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+                    style: pw.TextStyle(
+                      fontSize: 13,
+                      fontWeight: pw.FontWeight.bold,
+                      decoration: pw.TextDecoration.underline,
+                    ),
                   ),
-                  pw.SizedBox(height: 10),
+                  pw.SizedBox(height: 8),
                   pw.Text(
                     'No : $nomorSuratFinal',
-                    style: const pw.TextStyle(fontSize: 9),
+                    style: const pw.TextStyle(fontSize: 11),
                   ),
                 ],
               ),
             ),
-            pw.SizedBox(height: 16),
+            pw.SizedBox(height: 14),
 
-            pw.Text('Saya yang bertanda tangan di bawah ini,', style: const pw.TextStyle(fontSize: 9)),
-            pw.SizedBox(height: 6),
+            pw.Text('Yang bertanda tangan di bawah ini,',
+                style: const pw.TextStyle(fontSize: 11)),
+            pw.SizedBox(height: 4),
 
             // Identitas Pelanggan WMS
             pw.Padding(
@@ -59,11 +101,11 @@ class WmsPdfService {
                 ],
               ),
             ),
-            pw.SizedBox(height: 12),
+            pw.SizedBox(height: 10),
 
             pw.Text(
               'Dengan ini secara sadar dan tanpa tekanan menyatakan akan mematuhi ketentuan berikut:',
-              style: const pw.TextStyle(fontSize: 8.5),
+              style: const pw.TextStyle(fontSize: 11),
             ),
             pw.SizedBox(height: 6),
 
@@ -108,9 +150,9 @@ class WmsPdfService {
               10,
               'Saya setuju dengan syarat dan ketentuan yang berlaku di dalam Surat Pernyataan ini dan Kontrak Berlangganan Layanan WMS.',
             ),
-            pw.SizedBox(height: 24),
+            pw.SizedBox(height: 20),
 
-            // Tanda Tangan & Kotak Materai
+            // Tanda Tangan & Kotak Materai Kecil (Sesuai style standar surat lainnya) dengan Jarak Enter yang Tetap Lega
             pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.end,
               children: [
@@ -119,33 +161,53 @@ class WmsPdfService {
                   children: [
                     pw.Text(
                       '${data.kotaLokasi}, ${data.tanggalSurat}',
-                      style: const pw.TextStyle(fontSize: 8.5),
+                      style: const pw.TextStyle(fontSize: 11),
                     ),
                     pw.SizedBox(height: 4),
-                    // Kotak Materai 10rb
-                    pw.Container(
-                      width: 55,
-                      height: 42,
-                      alignment: pw.Alignment.center,
-                      decoration: pw.BoxDecoration(
-                        border: pw.Border.all(color: PdfColors.red700, width: 1),
-                      ),
-                      child: pw.Column(
-                        mainAxisAlignment: pw.MainAxisAlignment.center,
-                        children: [
-                          pw.Text('Materai', style: pw.TextStyle(fontSize: 7, color: PdfColors.black)),
-                          pw.Text('10rb', style: pw.TextStyle(fontSize: 7, fontWeight: pw.FontWeight.bold, color: PdfColors.black)),
-                        ],
+                    pw.Text(
+                      'Pelanggan',
+                      style: pw.TextStyle(
+                          fontSize: 11, fontWeight: pw.FontWeight.bold),
+                    ),
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(right: 15.0),
+                      child: pw.SizedBox(
+                        height: 80,
+                        child: pw.Column(
+                          mainAxisAlignment: pw.MainAxisAlignment.center,
+                          children: [
+                            pw.Container(
+                              width: 34,
+                              height: 30,
+                              alignment: pw.Alignment.center,
+                              decoration: pw.BoxDecoration(
+                                border: pw.Border.all(
+                                    color: PdfColors.grey700, width: 0.8),
+                              ),
+                              child: pw.Column(
+                                mainAxisAlignment: pw.MainAxisAlignment.center,
+                                children: [
+                                  pw.Text(
+                                    'Materai',
+                                    style: const pw.TextStyle(
+                                        fontSize: 6.5, color: PdfColors.black),
+                                  ),
+                                  pw.Text(
+                                    '10.000',
+                                    style: const pw.TextStyle(
+                                        fontSize: 6.5, color: PdfColors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    pw.SizedBox(height: 6),
+                    pw.SizedBox(height: 4),
                     pw.Text(
                       '(${data.namaPelanggan.isEmpty ? '....................................................' : data.namaPelanggan})',
-                      style: const pw.TextStyle(fontSize: 8.5),
-                    ),
-                    pw.Text(
-                      'Pelanggan Telkom',
-                      style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold),
+                      style: const pw.TextStyle(fontSize: 11),
                     ),
                   ],
                 ),
@@ -161,16 +223,17 @@ class WmsPdfService {
 
   static pw.Widget _buildDataRow(String label, String value) {
     return pw.Padding(
-      padding: const pw.EdgeInsets.symmetric(vertical: 1.5),
+      padding: const pw.EdgeInsets.symmetric(vertical: 1),
       child: pw.Row(
         children: [
           pw.SizedBox(
-            width: 140,
-            child: pw.Text(label, style: const pw.TextStyle(fontSize: 8.5)),
+            width: 150,
+            child: pw.Text(label, style: const pw.TextStyle(fontSize: 11)),
           ),
-          pw.Text(': ', style: const pw.TextStyle(fontSize: 8.5)),
+          pw.Text(': ', style: const pw.TextStyle(fontSize: 11)),
           pw.Expanded(
-            child: pw.Text(value.isEmpty ? '-' : value, style: const pw.TextStyle(fontSize: 8.5)),
+            child: pw.Text(value.isEmpty ? '-' : value,
+                style: const pw.TextStyle(fontSize: 11)),
           ),
         ],
       ),
@@ -184,13 +247,13 @@ class WmsPdfService {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.SizedBox(
-            width: 18,
-            child: pw.Text('$nomor.', style: const pw.TextStyle(fontSize: 8.5)),
+            width: 22,
+            child: pw.Text('$nomor.', style: const pw.TextStyle(fontSize: 11)),
           ),
           pw.Expanded(
             child: pw.Text(
               teks,
-              style: const pw.TextStyle(fontSize: 8.5),
+              style: const pw.TextStyle(fontSize: 11),
               textAlign: pw.TextAlign.justify,
             ),
           ),
