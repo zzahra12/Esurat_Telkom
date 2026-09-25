@@ -76,7 +76,7 @@ class WmsPdfService {
                   pw.SizedBox(height: 8),
                   pw.Text(
                     'No : $nomorSuratFinal',
-                    style: const pw.TextStyle(fontSize: 11),
+                    style: const pw.TextStyle(fontSize: 12),
                   ),
                 ],
               ),
@@ -161,7 +161,7 @@ class WmsPdfService {
                   children: [
                     pw.Text(
                       '${data.kotaLokasi}, ${data.tanggalSurat}',
-                      style: const pw.TextStyle(fontSize: 11),
+                      style: const pw.TextStyle(fontSize: 13),
                     ),
                     pw.SizedBox(height: 4),
                     pw.Text(

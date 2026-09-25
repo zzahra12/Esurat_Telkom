@@ -60,7 +60,7 @@ class BukaIsolirPdfService {
                 child: pw.Text(
                   'SURAT PERMINTAAN BUKA ISOLIR SEMENTARA LAYANAN',
                   style: pw.TextStyle(
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: pw.FontWeight.bold,
                     decoration: pw.TextDecoration.underline,
                   ),
@@ -70,7 +70,7 @@ class BukaIsolirPdfService {
 
               // 2. BAGIAN ATAS: DATA PELANGGAN
               pw.Text('Yang bertanda tangan di bawah ini :',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
@@ -87,7 +87,7 @@ class BukaIsolirPdfService {
               pw.Text(
                 '(*diisi bila mutasi dilakukan oleh pihak penerima kuasa dari PELANGGAN)',
                 style: pw.TextStyle(
-                  fontSize: 9.5,
+                  fontSize: 10,
                   fontStyle: pw.FontStyle.italic,
                   fontWeight: pw.FontWeight.bold,
                 ),
@@ -96,7 +96,7 @@ class BukaIsolirPdfService {
 
               // 3. BAGIAN TENGAH: DATA PENERIMA KUASA
               pw.Text('Bertindak untuk dan atas nama:',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
@@ -114,7 +114,7 @@ class BukaIsolirPdfService {
               // 4. DETAIL LAYANAN
               pw.Text(
                 'Selanjutnya disebut sebagai "PELANGGAN", selaku pihak yang berlangganan layanan sebagai berikut:',
-                style: const pw.TextStyle(fontSize: 11),
+                style: const pw.TextStyle(fontSize: 12),
               ),
               pw.SizedBox(height: 2),
               pw.Padding(
@@ -134,13 +134,13 @@ class BukaIsolirPdfService {
                 child: pw.Text(
                   'MENYATAKAN',
                   style: pw.TextStyle(
-                      fontSize: 11.5, fontWeight: pw.FontWeight.bold),
+                      fontSize: 12, fontWeight: pw.FontWeight.bold),
                 ),
               ),
               pw.SizedBox(height: 4),
               pw.Text(
                 'BAHWA, PELANGGAN adalah benar pihak yang berlangganan Layanan Indibiz berdasarkan Kontrak Berlangganan, dan dengan ini mengajukan permintaan Buka Isolir Sementara Layanan Indibiz, sebagai berikut:',
-                style: const pw.TextStyle(fontSize: 11),
+                style: const pw.TextStyle(fontSize: 12),
                 textAlign: pw.TextAlign.justify,
               ),
               pw.SizedBox(height: 6),
@@ -149,7 +149,7 @@ class BukaIsolirPdfService {
               pw.Text(
                 'Jenis Permohonan : Buka Isolir Sementara',
                 style: pw.TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: pw.FontWeight.bold,
                 ),
               ),
@@ -163,16 +163,16 @@ class BukaIsolirPdfService {
 
               // 7. KETERANGAN TAMBAHAN
               pw.Text('Keterangan Tambahan :',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 11)),
+                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 12)),
                   pw.Expanded(
                     child: pw.Text(
                       'Permohonan ini berlaku sejak ditandatanganinya Surat Permintaan Buka Isolir Sementara Layanan Indibiz ini.',
-                      style: const pw.TextStyle(fontSize: 11),
+                      style: const pw.TextStyle(fontSize: 12),
                     ),
                   ),
                 ],
@@ -180,11 +180,11 @@ class BukaIsolirPdfService {
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 11)),
+                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 12)),
                   pw.Expanded(
                     child: pw.Text(
                       'Surat Permintaan Buka Isolir Sementara Layanan Indibiz ini merupakan satu kesatuan yang tidak terpisahkan dengan Kontrak Berlangganan yang telah ditandatangani PT Telkom Indonesia (Persero) Tbk dengan PELANGGAN.',
-                      style: const pw.TextStyle(fontSize: 11),
+                      style: const pw.TextStyle(fontSize: 12),
                     ),
                   ),
                 ],
@@ -205,7 +205,7 @@ class BukaIsolirPdfService {
                         pw.Text(
                           'Penanggung Jawab Telkom',
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold),
+                              fontSize: 12, fontWeight: pw.FontWeight.bold),
                         ),
                         pw.SizedBox(height: 6),
                         // Tinggi area tanda tangan disesuaikan dengan tinggi kotak materai yang baru
@@ -224,7 +224,7 @@ class BukaIsolirPdfService {
                         pw.SizedBox(height: 4),
                         pw.Text(
                           '(${data.namaPjTelkom ?? 'Yustika Monita'})',
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
@@ -237,13 +237,13 @@ class BukaIsolirPdfService {
                       children: [
                         pw.Text(
                           tanggalRealtime,
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                         pw.SizedBox(height: 4),
                         pw.Text(
                           'Pelanggan',
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold),
+                              fontSize: 12, fontWeight: pw.FontWeight.bold),
                         ),
                         pw.SizedBox(height: 6),
                         // Kotak Materai Diperbesar (Lebar 65, Tinggi 56) agar sangat pas untuk materai fisik asli
@@ -282,7 +282,7 @@ class BukaIsolirPdfService {
                         pw.SizedBox(height: 4),
                         pw.Text(
                           '($atasNama)',
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                       ],
                     ),

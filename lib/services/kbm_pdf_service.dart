@@ -104,7 +104,7 @@ class KbmPdfService {
                 child: pw.Text(
                   'SURAT TUGAS PENGGUNAAN KBM DAN BBM HARIAN',
                   style: pw.TextStyle(
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: pw.FontWeight.bold,
                     decoration: pw.TextDecoration.underline,
                   ),
@@ -122,7 +122,7 @@ class KbmPdfService {
               // DESKRIPSI KEGIATAN
               pw.Text(
                 'Deskripsi Kegiatan',
-                style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+                style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
               ),
               pw.SizedBox(height: 4),
               pw.Container(
@@ -134,7 +134,7 @@ class KbmPdfService {
                 ),
                 child: pw.Text(
                   data.deskripsiKegiatan,
-                  style: const pw.TextStyle(fontSize: 11),
+                  style: const pw.TextStyle(fontSize: 12),
                   textAlign: pw.TextAlign.justify,
                 ),
               ),
@@ -153,12 +153,12 @@ class KbmPdfService {
                       children: [
                         pw.Text(
                           '${data.kotaLokasi}, ${data.tanggalSurat}',
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                         pw.SizedBox(height: 4),
                         pw.Text(
                           'Yang mengajukan,',
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                         pw.SizedBox(height: 4),
                         pw.SizedBox(
@@ -168,13 +168,13 @@ class KbmPdfService {
                               : pw.SizedBox(),
                         ),
                         pw.SizedBox(height: 4),
-                        pw.Text(nikPengaju, style: const pw.TextStyle(fontSize: 11)),
+                        pw.Text(nikPengaju, style: const pw.TextStyle(fontSize: 12)),
                         pw.Text(
                           data.namaPengaju.toUpperCase(),
-                          style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+                          style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
                         ),
-                        pw.Text(jabatanPengaju, style: const pw.TextStyle(fontSize: 11)),
-                        pw.Text(lokasiPengaju, style: const pw.TextStyle(fontSize: 11)),
+                        pw.Text(jabatanPengaju, style: const pw.TextStyle(fontSize: 12)),
+                        pw.Text(lokasiPengaju, style: const pw.TextStyle(fontSize: 12)),
                       ],
                     ),
                   ),
@@ -191,7 +191,7 @@ class KbmPdfService {
                         pw.SizedBox(height: 18), 
                         pw.Text(
                           'Yang menyetujui,',
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                         pw.SizedBox(height: 4),
                         pw.SizedBox(
@@ -201,13 +201,13 @@ class KbmPdfService {
                               : pw.SizedBox(),
                         ),
                         pw.SizedBox(height: 4),
-                        pw.Text('NIK. 790032', style: const pw.TextStyle(fontSize: 11)),
+                        pw.Text('NIK. 790032', style: const pw.TextStyle(fontSize: 12)),
                         pw.Text(
                           'MUHAMMAD LUKMAN HAKIM',
-                          style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+                          style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
                         ),
-                        pw.Text('HEAD OF TELKOM DAERAH', style: const pw.TextStyle(fontSize: 11)),
-                        pw.Text('BANYUWANGI', style: const pw.TextStyle(fontSize: 11)),
+                        pw.Text('HEAD OF TELKOM DAERAH', style: const pw.TextStyle(fontSize: 12)),
+                        pw.Text('BANYUWANGI', style: const pw.TextStyle(fontSize: 12)),
                       ],
                     ),
                   ),
@@ -230,13 +230,13 @@ class KbmPdfService {
         children: [
           pw.SizedBox(
             width: 110,
-            child: pw.Text(label, style: const pw.TextStyle(fontSize: 11)),
+            child: pw.Text(label, style: const pw.TextStyle(fontSize: 12)),
           ),
-          pw.Text(': ', style: const pw.TextStyle(fontSize: 11)),
+          pw.Text(': ', style: const pw.TextStyle(fontSize: 12)),
           pw.Expanded(
             child: pw.Text(
               value.isEmpty ? '-' : value,
-              style: const pw.TextStyle(fontSize: 11),
+              style: const pw.TextStyle(fontSize: 12),
             ),
           ),
         ],

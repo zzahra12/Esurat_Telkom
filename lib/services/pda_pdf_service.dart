@@ -67,7 +67,7 @@ class PdaPdfService {
                 child: pw.Text(
                   'SURAT PERMINTAAN PINDAH ALAMAT LAYANAN',
                   style: pw.TextStyle(
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: pw.FontWeight.bold,
                     decoration: pw.TextDecoration.underline,
                   ),
@@ -77,7 +77,7 @@ class PdaPdfService {
 
               // 2. BAGIAN ATAS: DATA PELANGGAN
               pw.Text('Yang bertanda tangan di bawah ini :',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
@@ -94,7 +94,7 @@ class PdaPdfService {
               pw.Text(
                 '(*diisi bila mutasi dilakukan oleh pihak penerima kuasa dari PELANGGAN)',
                 style: pw.TextStyle(
-                  fontSize: 9.5,
+                  fontSize: 10,
                   fontStyle: pw.FontStyle.italic,
                   fontWeight: pw.FontWeight.bold,
                 ),
@@ -103,7 +103,7 @@ class PdaPdfService {
 
               // 3. BAGIAN TENGAH: DATA PENERIMA KUASA
               pw.Text('Bertindak untuk dan atas nama :',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
@@ -121,7 +121,7 @@ class PdaPdfService {
               // 4. DETAIL LAYANAN
               pw.Text(
                 'Selanjutnya disebut sebagai "PELANGGAN", selaku pihak yang berlangganan layanan Indibiz sebagai berikut:',
-                style: const pw.TextStyle(fontSize: 11),
+                style: const pw.TextStyle(fontSize: 12),
               ),
               pw.SizedBox(height: 2),
               pw.Padding(
@@ -147,7 +147,7 @@ class PdaPdfService {
               pw.SizedBox(height: 4),
               pw.Text(
                 'BAHWA, PELANGGAN adalah benar pihak yang berlangganan Layanan Indibiz berdasarkan Kontrak Berlangganan, dan dengan ini mengajukan permintaan Pindah Alamat Layanan Indibiz, sebagai berikut:',
-                style: const pw.TextStyle(fontSize: 11),
+                style: const pw.TextStyle(fontSize: 12),
                 textAlign: pw.TextAlign.justify,
               ),
               pw.SizedBox(height: 6),
@@ -156,7 +156,7 @@ class PdaPdfService {
               pw.Text(
                 'Jenis Permohonan : Pindah Alamat',
                 style: pw.TextStyle(
-                    fontSize: 11, fontWeight: pw.FontWeight.bold),
+                    fontSize: 12, fontWeight: pw.FontWeight.bold),
               ),
               pw.SizedBox(height: 2),
               pw.Padding(
@@ -177,16 +177,16 @@ class PdaPdfService {
 
               // 7. KETERANGAN TAMBAHAN
               pw.Text('Keterangan Tambahan :',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 11)),
+                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 12)),
                   pw.Expanded(
                     child: pw.Text(
                       'Permohonan ini berlaku sejak ditandatanganinya Surat Permintaan Pindah Alamat Layanan Indibiz ini.',
-                      style: const pw.TextStyle(fontSize: 11),
+                      style: const pw.TextStyle(fontSize: 12),
                     ),
                   ),
                 ],
@@ -194,11 +194,11 @@ class PdaPdfService {
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 11)),
+                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 12)),
                   pw.Expanded(
                     child: pw.Text(
                       'Surat Permintaan Pindah Alamat Layanan Indibiz ini merupakan satu kesatuan yang tidak terpisahkan dengan Kontrak Berlangganan yang telah ditandatanganinya PT Telkom Indonesia (Persero) Tbk dengan PELANGGAN.',
-                      style: const pw.TextStyle(fontSize: 11),
+                      style: const pw.TextStyle(fontSize: 12),
                     ),
                   ),
                 ],
@@ -219,7 +219,7 @@ class PdaPdfService {
                         pw.Text(
                           'Penanggung Jawab Telkom',
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold),
+                              fontSize: 12, fontWeight: pw.FontWeight.bold),
                         ),
                         pw.SizedBox(height: 6),
                         pw.SizedBox(
@@ -237,7 +237,7 @@ class PdaPdfService {
                         pw.SizedBox(height: 4),
                         pw.Text(
                           '(${data.namaPjTelkom ?? 'Yustika Monita'})',
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
@@ -250,13 +250,13 @@ class PdaPdfService {
                       children: [
                         pw.Text(
                           tanggalRealtime,
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                         pw.SizedBox(height: 4),
                         pw.Text(
                           'Pelanggan',
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold),
+                              fontSize: 12, fontWeight: pw.FontWeight.bold),
                         ),
                         pw.SizedBox(height: 6),
                         // Kotak Materai Diperbesar (Lebar 65, Tinggi 56) pas untuk materai fisik
@@ -295,7 +295,7 @@ class PdaPdfService {
                         pw.SizedBox(height: 4),
                         pw.Text(
                           '($atasNama)',
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                       ],
                     ),

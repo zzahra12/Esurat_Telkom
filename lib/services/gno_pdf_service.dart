@@ -57,7 +57,7 @@ class GnoPdfService {
                 child: pw.Text(
                   'SURAT PERMINTAAN GANTI NOMOR LAYANAN',
                   style: pw.TextStyle(
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: pw.FontWeight.bold,
                     decoration: pw.TextDecoration.underline,
                   ),
@@ -67,7 +67,7 @@ class GnoPdfService {
 
               // 2. BAGIAN ATAS: DATA PELANGGAN
               pw.Text('Yang bertanda tangan di bawah ini :',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
@@ -84,7 +84,7 @@ class GnoPdfService {
               pw.Text(
                 '(*diisi bila mutasi dilakukan oleh pihak penerima kuasa dari PELANGGAN)',
                 style: pw.TextStyle(
-                    fontSize: 9.5,
+                    fontSize: 10,
                     fontStyle: pw.FontStyle.italic,
                     fontWeight: pw.FontWeight.bold),
               ),
@@ -92,7 +92,7 @@ class GnoPdfService {
 
               // 3. BAGIAN TENGAH: DATA KUASA
               pw.Text('Bertindak untuk dan atas nama :',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
@@ -109,7 +109,7 @@ class GnoPdfService {
 
               pw.Text(
                 'Selanjutnya disebut sebagai "PELANGGAN", selaku pihak yang berlangganan layanan Indibiz sebagai berikut:',
-                style: const pw.TextStyle(fontSize: 11),
+                style: const pw.TextStyle(fontSize: 12),
               ),
               pw.SizedBox(height: 2),
 
@@ -136,7 +136,7 @@ class GnoPdfService {
               pw.Text(
                 'BAHWA, PELANGGAN adalah benar pihak yang berlangganan Layanan Indibiz berdasarkan Kontrak Berlangganan, dan dengan ini mengajukan permintaan Ganti Nomor Layanan Indibiz, sebagai berikut:',
                 textAlign: pw.TextAlign.justify,
-                style: const pw.TextStyle(fontSize: 11),
+                style: const pw.TextStyle(fontSize: 12),
               ),
               pw.SizedBox(height: 6),
 
@@ -144,7 +144,7 @@ class GnoPdfService {
               pw.Text(
                 'Jenis Permohonan : Ganti Nomor Telepon / Internet',
                 style:
-                    pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+                    pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
               ),
               pw.SizedBox(height: 2),
               pw.Padding(
@@ -165,16 +165,16 @@ class GnoPdfService {
 
               // 6. KETERANGAN TAMBAHAN
               pw.Text('Keterangan Tambahan :',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 11)),
+                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 12)),
                   pw.Expanded(
                     child: pw.Text(
                       'Permohonan ini berlaku sejak ditandatanganinya Surat Permintaan Ganti Nomor Layanan Indibiz ini.',
-                      style: const pw.TextStyle(fontSize: 11),
+                      style: const pw.TextStyle(fontSize: 12),
                     ),
                   ),
                 ],
@@ -182,11 +182,11 @@ class GnoPdfService {
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 11)),
+                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 12)),
                   pw.Expanded(
                     child: pw.Text(
                       'Surat Permintaan Ganti Nomor Layanan Indibiz ini merupakan satu kesatuan yang tidak terpisahkan dengan Kontrak Berlangganan yang telah ditandatanganinya PT Telkom Indonesia (Persero) Tbk dengan PELANGGAN.',
-                      style: const pw.TextStyle(fontSize: 11),
+                      style: const pw.TextStyle(fontSize: 12),
                     ),
                   ),
                 ],
@@ -207,7 +207,7 @@ class GnoPdfService {
                         pw.Text(
                           'Penanggung Jawab Telkom',
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold),
+                              fontSize: 12, fontWeight: pw.FontWeight.bold),
                         ),
                         pw.SizedBox(height: 6),
                         pw.SizedBox(
@@ -225,7 +225,7 @@ class GnoPdfService {
                         pw.SizedBox(height: 4),
                         pw.Text(
                           '(${data.namaPjTelkom})',
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
@@ -238,13 +238,13 @@ class GnoPdfService {
                       children: [
                         pw.Text(
                           tanggalRealtime,
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                         pw.SizedBox(height: 4),
                         pw.Text(
                           'Pelanggan',
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold),
+                              fontSize: 12, fontWeight: pw.FontWeight.bold),
                         ),
                         pw.SizedBox(height: 6),
                         // Kotak Materai Diperbesar (Lebar 65, Tinggi 56) pas untuk materai fisik
@@ -280,7 +280,7 @@ class GnoPdfService {
                         pw.SizedBox(height: 4),
                         pw.Text(
                           '(${data.namaPelanggan})',
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                       ],
                     ),

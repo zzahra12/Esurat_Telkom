@@ -66,7 +66,7 @@ class UpgradeDowngradePdfService {
                     pw.Text(
                       'SURAT PERMINTAAN',
                       style: pw.TextStyle(
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: pw.FontWeight.bold,
                         decoration: pw.TextDecoration.underline,
                       ),
@@ -74,7 +74,7 @@ class UpgradeDowngradePdfService {
                     pw.Text(
                       'MODIFIKASI LAYANAN',
                       style: pw.TextStyle(
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: pw.FontWeight.bold,
                         decoration: pw.TextDecoration.underline,
                       ),
@@ -86,7 +86,7 @@ class UpgradeDowngradePdfService {
 
               // 2. BAGIAN ATAS: DATA PELANGGAN
               pw.Text('Yang bertanda tangan di bawah ini :',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
@@ -112,7 +112,7 @@ class UpgradeDowngradePdfService {
 
               // 3. BAGIAN TENGAH: DATA KUASA
               pw.Text('Bertindak untuk dan atas nama:',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 10),
@@ -130,7 +130,7 @@ class UpgradeDowngradePdfService {
               // 4. DETAIL LAYANAN
               pw.Text(
                 'Selanjutnya disebut sebagai "PELANGGAN", selaku pihak yang berlangganan layanan Indibiz sebagai berikut:',
-                style: const pw.TextStyle(fontSize: 11),
+                style: const pw.TextStyle(fontSize: 12),
               ),
               pw.SizedBox(height: 2),
               pw.Padding(
@@ -150,7 +150,7 @@ class UpgradeDowngradePdfService {
                 child: pw.Text(
                   'MENYATAKAN',
                   style: pw.TextStyle(
-                      fontSize: 11.5, fontWeight: pw.FontWeight.bold),
+                      fontSize: 12, fontWeight: pw.FontWeight.bold),
                 ),
               ),
               pw.SizedBox(height: 4),
@@ -160,7 +160,7 @@ class UpgradeDowngradePdfService {
                 textAlign: pw.TextAlign.justify,
                 text: pw.TextSpan(
                   style: const pw.TextStyle(
-                      fontSize: 11, color: PdfColors.black),
+                      fontSize: 12, color: PdfColors.black),
                   children: [
                     const pw.TextSpan(
                       text:
@@ -198,7 +198,7 @@ class UpgradeDowngradePdfService {
               pw.Text(
                 'Jenis Permohonan :',
                 style: pw.TextStyle(
-                    fontSize: 11, fontWeight: pw.FontWeight.bold),
+                    fontSize: 12, fontWeight: pw.FontWeight.bold),
               ),
               pw.SizedBox(height: 2),
               pw.Padding(
@@ -217,16 +217,16 @@ class UpgradeDowngradePdfService {
 
               // 7. KETERANGAN TAMBAHAN
               pw.Text('Keterangan Tambahan :',
-                  style: const pw.TextStyle(fontSize: 11)),
+                  style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 2),
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 11)),
+                  pw.Text('1.  ', style: const pw.TextStyle(fontSize: 12)),
                   pw.Expanded(
                     child: pw.Text(
                       'Permohonan ini berlaku sejak ditandatanganinya Surat Permintaan Upgrade/Downgrade Layanan ini.',
-                      style: const pw.TextStyle(fontSize: 11),
+                      style: const pw.TextStyle(fontSize: 12),
                     ),
                   ),
                 ],
@@ -234,11 +234,11 @@ class UpgradeDowngradePdfService {
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 11)),
+                  pw.Text('2.  ', style: const pw.TextStyle(fontSize: 12)),
                   pw.Expanded(
                     child: pw.Text(
                       'Surat Permintaan Upgrade/Downgrade Layanan ini merupakan satu kesatuan yang tidak terpisahkan dengan Kontrak Berlangganan yang telah ditandatanganinya PT Telkom Indonesia (Persero) Tbk dengan PELANGGAN.',
-                      style: const pw.TextStyle(fontSize: 11),
+                      style: const pw.TextStyle(fontSize: 12),
                     ),
                   ),
                 ],
@@ -259,7 +259,7 @@ class UpgradeDowngradePdfService {
                         pw.Text(
                           'Penanggung Jawab Telkom',
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold),
+                              fontSize: 12, fontWeight: pw.FontWeight.bold),
                         ),
                         pw.SizedBox(height: 6),
                         pw.SizedBox(
@@ -277,7 +277,7 @@ class UpgradeDowngradePdfService {
                         pw.SizedBox(height: 4),
                         pw.Text(
                           '(${data.namaPjTelkom})',
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
@@ -290,13 +290,13 @@ class UpgradeDowngradePdfService {
                       children: [
                         pw.Text(
                           tanggalRealtime,
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                         pw.SizedBox(height: 4),
                         pw.Text(
                           'Pelanggan',
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold),
+                              fontSize: 12, fontWeight: pw.FontWeight.bold),
                         ),
                         pw.SizedBox(height: 6),
                         // Kotak Materai Diperbesar (Lebar 65, Tinggi 56) pas untuk materai fisik
@@ -332,7 +332,7 @@ class UpgradeDowngradePdfService {
                         pw.SizedBox(height: 4),
                         pw.Text(
                           '(${data.namaPelanggan})',
-                          style: const pw.TextStyle(fontSize: 11),
+                          style: const pw.TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
