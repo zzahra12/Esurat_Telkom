@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart'; // 👈 1. Tambahkan import ini
 import 'views/login_page.dart'; 
 
-void main() {
+void main() async { // 👈 2. Tambahkan async di sini
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('id_ID', null); // 👈 3. Tambahkan baris ini
   runApp(const MyApp());
 }
 

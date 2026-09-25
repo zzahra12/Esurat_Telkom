@@ -65,6 +65,11 @@ flutter:
 
   assets:
     - assets/images/ttd-telkom.jpg
+    - assets/images/IMPACT.png
+    - assets/images/ttd-pak Lukman.jpeg
+    - assets/images/ttd-Ericha.jpeg
+    - assets/images/ttd-Azki.jpeg
+    - assets/images/logo-telkom.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

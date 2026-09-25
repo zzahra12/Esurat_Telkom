@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// Import semua file form surat yang tersedia
+// Import semua file form surat yang tersedia termasuk KBM
 import 'form_buka_isolir_page.dart'; 
 import 'form_pda_page.dart';     
 import 'form_gno_page.dart';     
@@ -7,7 +7,9 @@ import 'form_bna_page.dart';
 import 'form_do_page.dart';
 import 'form_isolir_page.dart';
 import 'form_upgrade_downgrade_page.dart';
-import 'form_wms_page.dart'; // 👈 Import Form WMS yang baru dibuat
+import 'form_wms_page.dart';
+import 'form_kbm_page.dart'; // 👈 Tambahkan import Form KBM di sini
+
 
 class PilihJenisSuratScreen extends StatelessWidget {
   const PilihJenisSuratScreen({super.key});
@@ -20,7 +22,8 @@ class PilihJenisSuratScreen extends StatelessWidget {
     'Surat Permintaan DO',
     'Surat Permintaan Isolir',
     'Surat Upgrade-Downgrade',
-    'Surat Pernyataan WMS', // 👈 Tambahkan ke dalam list
+    'Surat Pernyataan WMS',
+    'Surat Tugas KBM & BBM', // 👈 Tambahkan ke dalam list menu
   ];
 
   void _pilihSurat(BuildContext context, String jenisSurat) {
@@ -60,10 +63,15 @@ class PilihJenisSuratScreen extends StatelessWidget {
         MaterialPageRoute(builder: (context) => const FormUpgradeDowngradePage()),
       );
     } else if (jenisSurat == 'Surat Pernyataan WMS') {
-      // 👈 Navigasi ke Form WMS
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const FormWmsPage()),
+      );
+    } else if (jenisSurat == 'Surat Tugas KBM & BBM') {
+      // 👈 Arahkan navigasi ke Form KBM
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const KbmFormView()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

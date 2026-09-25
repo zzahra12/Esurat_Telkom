@@ -210,7 +210,7 @@ class BukaIsolirPdfService {
                         pw.SizedBox(height: 6),
                         // Tinggi area tanda tangan disesuaikan dengan tinggi kotak materai yang baru
                         pw.SizedBox(
-                          height: 70, 
+                          height: 80, 
                           child: pw.Center(
                             child: (data.tampilkanTtdTelkom == true && ttdImage != null)
                                 ? pw.Image(
@@ -248,11 +248,11 @@ class BukaIsolirPdfService {
                         pw.SizedBox(height: 6),
                         // Kotak Materai Diperbesar (Lebar 65, Tinggi 56) agar sangat pas untuk materai fisik asli
                         pw.SizedBox(
-                          height: 70,
+                          height: 80,
                           child: pw.Center(
                             child: pw.Container(
-                              width: 65,
-                              height: 56,
+                              width: 39,
+                              height: 35,
                               alignment: pw.Alignment.center,
                               decoration: pw.BoxDecoration(
                                 border: pw.Border.all(

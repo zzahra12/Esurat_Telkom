@@ -177,8 +177,8 @@ class WmsPdfService {
                           mainAxisAlignment: pw.MainAxisAlignment.center,
                           children: [
                             pw.Container(
-                              width: 34,
-                              height: 30,
+                              width: 39,
+                              height: 35,
                               alignment: pw.Alignment.center,
                               decoration: pw.BoxDecoration(
                                 border: pw.Border.all(

@@ -263,7 +263,7 @@ class UpgradeDowngradePdfService {
                         ),
                         pw.SizedBox(height: 6),
                         pw.SizedBox(
-                          height: 70, // Tinggi area tanda tangan disesuaikan dengan kotak materai
+                          height: 80, // Tinggi area tanda tangan disesuaikan dengan kotak materai
                           child: pw.Center(
                             child: (data.tampilkanTtdTelkom && ttdImage != null)
                                 ? pw.Image(
@@ -301,11 +301,11 @@ class UpgradeDowngradePdfService {
                         pw.SizedBox(height: 6),
                         // Kotak Materai Diperbesar (Lebar 65, Tinggi 56) pas untuk materai fisik
                         pw.SizedBox(
-                          height: 70,
+                          height: 80,
                           child: pw.Center(
                             child: pw.Container(
-                              width: 65,
-                              height: 56,
+                              width: 39,
+                              height: 35,
                               alignment: pw.Alignment.center,
                               decoration: pw.BoxDecoration(
                                 border: pw.Border.all(
